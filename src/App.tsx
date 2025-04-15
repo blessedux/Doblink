@@ -1,12 +1,81 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/ui/Navbar';
-import FarmWidget from './components/farm/FarmWidget';
-import PoolsWidget from './components/pools/PoolsWidget';
-import AgentsWidget from './components/agents/AgentsWidget';
-import PortfolioWidget from './components/portfolio/PortfolioWidget';
-import BackgroundGradient from './components/ui/BackgroundGradient';
 import Button from './components/ui/Button';
-import { AGENTS, AGENT_MESSAGES, AgentInfo, AgentSuggestion } from './components/farm/FarmWidget';
+import BackgroundGradient from './components/ui/BackgroundGradient';
+import FarmWidget from './components/farm/FarmWidget';
+
+// Simple mock components
+const PoolsWidget: React.FC = () => {
+  return (
+    <div className="p-6">
+      <h2 className="text-xl font-medium text-white mb-4">Liquidity Pools</h2>
+      <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 mb-4">
+        <p className="text-white/80">Provide liquidity to earn trading fees and rewards.</p>
+      </div>
+    </div>
+  );
+};
+
+const AgentsWidget: React.FC = () => {
+  return (
+    <div className="p-6">
+      <h2 className="text-xl font-medium text-white mb-4">AI Agents Dashboard</h2>
+      <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 mb-4">
+        <p className="text-white/80">AI agents that optimize your portfolio are coming soon.</p>
+      </div>
+    </div>
+  );
+};
+
+const PortfolioWidget: React.FC = () => {
+  return (
+    <div className="p-6">
+      <h2 className="text-xl font-medium text-white mb-4">Your Portfolio</h2>
+      <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 mb-4">
+        <p className="text-white/80">A comprehensive view of your holdings will appear here.</p>
+      </div>
+    </div>
+  );
+};
+
+// Agent data for assistant feature
+const AGENTS = [
+  {
+    id: 'yield-optimizer',
+    name: 'YieldMax AI',
+    logo: 'https://img.icons8.com/color/96/000000/artificial-intelligence.png',
+    strategy: 'Optimizes yield across infrastructure tokens with focus on sustainable energy assets.',
+    performance: 12.4,
+    status: 'active' as const,
+    managedTokens: ['SOLAR', 'EVCH', 'WIFI', 'FARM'],
+  }
+];
+
+const AGENT_MESSAGES = [
+  { message: 'Solar Panel Network is performing well today', token: 'SOLAR' },
+  { message: 'Consider investing in renewable energy tokens', token: undefined },
+  { message: 'EV Charging Network is trending upward', token: 'EVCH' },
+  { message: 'I\'ve detected a positive pattern in', token: 'FARM' },
+  { message: 'Infrastructure tokens are outperforming the market', token: undefined },
+];
+
+interface AgentInfo {
+  id: string;
+  name: string;
+  logo: string;
+  strategy: string;
+  performance: number;
+  status: 'active' | 'idle' | 'optimizing';
+  managedTokens: string[];
+}
+
+interface AgentSuggestion {
+  id: string;
+  message: string;
+  token?: string;
+  timestamp: number;
+  visible: boolean;
+}
 
 type TabType = 'farm' | 'pools' | 'agents' | 'portfolio';
 
@@ -82,7 +151,7 @@ function App() {
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
 
       <main className="flex-1 flex items-center justify-center p-4">
-        <div className="bg-black/20 backdrop-blur-sm rounded-2xl shadow-xl">
+        <div className="w-full max-w-4xl bg-black/20 backdrop-blur-sm rounded-2xl shadow-xl">
           {activeTab === 'farm' && <FarmWidget />}
           {activeTab === 'pools' && <PoolsWidget />}
           {activeTab === 'agents' && <AgentsWidget />}
