@@ -78,10 +78,33 @@ module.exports = {
             height: "0",
           },
         },
+        'gradient-shift': {
+          '0%, 100%': {
+            backgroundSize: '200% 200%',
+            backgroundPosition: 'left center',
+            background: 'linear-gradient(-45deg, #5D34FF, #FFFFFF, #664BDA, #5D34FF)',
+          },
+          '25%': {
+            backgroundSize: '200% 200%',
+            backgroundPosition: 'right center',
+            background: 'linear-gradient(-45deg, #FFFFFF, #664BDA, #5D34FF, #FFFFFF)',
+          },
+          '50%': {
+            backgroundSize: '200% 200%',
+            backgroundPosition: 'left center',
+            background: 'linear-gradient(-45deg, #664BDA, #5D34FF, #FFFFFF, #664BDA)',
+          },
+          '75%': {
+            backgroundSize: '200% 200%',
+            backgroundPosition: 'right center',
+            background: 'linear-gradient(-45deg, #5D34FF, #FFFFFF, #664BDA, #5D34FF)',
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'gradient-shift': 'gradient-shift 15s ease infinite',
       },
       container: {
         center: true,

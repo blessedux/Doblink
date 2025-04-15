@@ -17,14 +17,18 @@ const Button: React.FC<ButtonProps> = ({
   className = '',
   fullWidth = false,
 }) => {
-  const baseClasses = 'py-3 px-6 font-medium text-center rounded-2xl transition-all duration-200';
+  const baseClasses = 'py-3 px-6 font-medium text-center rounded-xl transition-all duration-200';
 
   const variantClasses = {
-    default: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
-    primary: 'swap-button',
-    secondary: 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-50',
-    connect: 'connect-wallet-button',
+    default: 'bg-white/15 backdrop-blur-sm text-white border border-white/15 hover:bg-white/25',
+    primary: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/20',
+    secondary: 'bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/15',
+    connect: 'bg-gradient-to-r from-indigo-600 to-purple-500 text-white hover:from-indigo-700 hover:to-purple-600 shadow-lg shadow-indigo-500/20',
   };
+
+  const disabledClasses = disabled 
+    ? 'opacity-50 cursor-not-allowed' 
+    : 'hover:shadow-lg';
 
   const widthClass = fullWidth ? 'w-full' : '';
 
@@ -32,7 +36,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClasses} ${variantClasses[variant]} ${widthClass} ${className}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${disabledClasses} ${widthClass} ${className}`}
     >
       {children}
     </button>
