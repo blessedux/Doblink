@@ -87,9 +87,9 @@ function App() {
   const [suggestionState, setSuggestionState] = useState<'appearing' | 'visible' | 'disappearing' | 'hidden'>('hidden');
   const [isAgentHovered, setIsAgentHovered] = useState(false);
   
-  // Reference to timeout for cleanup
-  const suggestionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const suggestionAnimationRef = useRef<NodeJS.Timeout | null>(null);
+  // Reference to timeout for cleanup - using number type which is compatible with browser setTimeout
+  const suggestionTimeoutRef = useRef<number | null>(null);
+  const suggestionAnimationRef = useRef<number | null>(null);
   
   // Generate agent suggestions
   useEffect(() => {
@@ -110,15 +110,15 @@ function App() {
         setSuggestionState('appearing');
         
         // After a brief delay for the appear animation, set to visible
-        suggestionAnimationRef.current = setTimeout(() => {
+        suggestionAnimationRef.current = window.setTimeout(() => {
           setSuggestionState('visible');
           
           // Set timer to start disappearing
-          suggestionAnimationRef.current = setTimeout(() => {
+          suggestionAnimationRef.current = window.setTimeout(() => {
             setSuggestionState('disappearing');
             
             // After disappearing animation, hide completely
-            suggestionAnimationRef.current = setTimeout(() => {
+            suggestionAnimationRef.current = window.setTimeout(() => {
               setSuggestionState('hidden');
             }, 500);
           }, 4000); // Show for 4 seconds
@@ -127,10 +127,10 @@ function App() {
     };
     
     // First suggestion after a slight delay
-    suggestionTimeoutRef.current = setTimeout(createSuggestion, 2000);
+    suggestionTimeoutRef.current = window.setTimeout(createSuggestion, 2000);
     
     // Create a new suggestion every 7-9 seconds
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       createSuggestion();
     }, 7000 + Math.random() * 2000);
     
