@@ -1,39 +1,50 @@
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
 export function useWallet() {
-  const { login, logout, authenticated, ready } = usePrivy();
-  const { wallets } = useWallets();
+  const [address, setAddress] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
-  const connect = useCallback(async () => {
-    try {
-      await login();
-    } catch (error) {
-      console.error('Failed to connect wallet:', error);
-      throw error;
+  useEffect(() => {
+    async function fetchAddress() {
+      if (typeof window !== 'undefined' && (window as any).ethereum) {
+        try {
+          const accounts = await (window as any).ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            setAddress(accounts[0]);
+            setIsConnected(true);
+          } else {
+            setAddress(null);
+            setIsConnected(false);
+          }
+        } catch (err) {
+          setAddress(null);
+          setIsConnected(false);
+        }
+      }
     }
-  }, [login]);
+    fetchAddress();
 
-  const disconnect = useCallback(async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Failed to disconnect wallet:', error);
-      throw error;
+    // Listen for account changes
+    if (typeof window !== 'undefined' && (window as any).ethereum) {
+      (window as any).ethereum.on('accountsChanged', (accounts: string[]) => {
+        setAddress(accounts[0] || null);
+        setIsConnected(accounts.length > 0);
+      });
     }
-  }, [logout]);
+  }, []);
 
-  const getWalletAddress = useCallback(() => {
-    if (!wallets.length) return null;
-    return wallets[0].address;
-  }, [wallets]);
-
-  return {
-    connect,
-    disconnect,
-    isConnected: authenticated,
-    isReady: ready,
-    address: getWalletAddress(),
-    wallets,
+  const connect = async () => {
+    if (typeof window !== 'undefined' && (window as any).ethereum) {
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+      setAddress(accounts[0]);
+      setIsConnected(true);
+    }
   };
+
+  const disconnect = () => {
+    setAddress(null);
+    setIsConnected(false);
+  };
+
+  return { address, isConnected, connect, disconnect };
 } 
