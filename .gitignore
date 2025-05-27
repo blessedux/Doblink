@@ -47,6 +47,7 @@ bun.lockb
 # Frontend
 frontend/.vite/
 frontend/.cache/
+frontend/.env/
 
 # Backend
 backend/.env
