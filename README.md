@@ -1,159 +1,62 @@
-# DOBSWAP Protocol
+# DOBLINK: Embeddable Payment Processor for DePIN Revenue Tokens
 
-A decentralized exchange for Real World Asset (RWA) tokens with verified revenue backing.
+DOBLINK is a plug-and-play, embeddable payment processor for DePIN (Decentralized Physical Infrastructure Network) future revenue tokens. Projects in the DOB ecosystem can embed this widget on their landing page to allow users to buy/sell tokens directly, with full wallet and smart contract integration.
 
-## Project Structure
+## Features
 
-```
-dobswap/
-├── frontend/                 # React frontend application
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── contexts/        # React contexts
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── config/         # Configuration files
-│   │   ├── types/          # TypeScript type definitions
-│   │   ├── utils/          # Utility functions
-│   │   └── App.tsx         # Main application component
-│   ├── public/             # Static assets
-│   └── package.json        # Frontend dependencies
-│
-├── contracts/               # Smart contracts
-│   ├── src/                # Contract source files
-│   │   ├── core/          # Core protocol contracts
-│   │   ├── tokens/        # Token contracts
-│   │   ├── interfaces/    # Contract interfaces
-│   │   └── libraries/     # Contract libraries
-│   ├── test/              # Contract tests
-│   ├── scripts/           # Deployment scripts
-│   └── package.json       # Contract dependencies
-│
-├── backend/                # Backend services
-│   ├── src/               # Backend source code
-│   │   ├── api/          # API endpoints
-│   │   ├── services/     # Business logic
-│   │   ├── models/       # Data models
-│   │   └── utils/        # Utility functions
-│   └── package.json      # Backend dependencies
-│
-└── docs/                  # Documentation
-    ├── architecture/     # Architecture diagrams
-    ├── api/             # API documentation
-    └── contracts/       # Smart contract documentation
+- **Embeddable Widget:** Add to any site as a React component or iframe
+- **Wallet Connect:** MetaMask, Privy, and more
+- **Buy/Sell Tokens:** Direct integration with DePIN smart contracts
+- **Customizable:** Theme, logo, and text can be tailored to your brand
+- **Portfolio Display:** Show user's holdings (optional)
+- **Responsive & Modern UI:** Glassmorphism, mobile-friendly
+
+## Example Usage
+
+### React SDK
+
+```jsx
+import { DobLinkWidget } from "doblink-sdk";
+
+<DobLinkWidget
+  token={{
+    address: "0x...",
+    name: "E-Hive EV Charger",
+    logo: "/Ehive-logo.png",
+    apy: 18.7,
+  }}
+  theme="light"
+  showPortfolio={false}
+/>;
 ```
 
-## Technology Stack
+### Iframe Embed
 
-### Frontend
-
-- React 18
-- TypeScript
-- TailwindCSS
-- Vite
-- Privy (Authentication)
-- Wagmi (Ethereum interactions)
-
-### Smart Contracts
-
-- Solidity
-- Hardhat
-- OpenZeppelin
-- Ethers.js
-
-### Backend
-
-- Node.js
-- Express
-- TypeScript
-- PostgreSQL
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- Bun
-- Git
-
-### Frontend Setup
-
-```bash
-cd frontend
-bun install
-bun run dev
+```html
+<iframe
+  src="https://dobprotocol.com/embed/doblink?token=0x..."
+  width="420"
+  height="600"
+  style="border:0; border-radius:16px; box-shadow:0 4px 24px rgba(80,112,255,0.08);"
+></iframe>
 ```
 
-### Smart Contract Setup
+## Customization
 
-```bash
-cd contracts
-bun install
-bun run compile
-```
+- Pass props or query params for logo, colors, and text
+- Light/dark mode support
+- Responsive for all devices
 
-### Backend Setup
+## Integration
 
-```bash
-cd backend
-bun install
-bun run dev
-```
+- Connects to DePIN smart contracts for token sales
+- Secure wallet connection and transaction signing
+- Can be extended for analytics and backend integration
 
-## Development Workflow
+## Roadmap
 
-1. Create a new branch for your feature
-2. Make your changes
-3. Write tests
-4. Submit a pull request
+See `TODO.md` for the current development plan and deliverables.
 
-## Testing
+---
 
-### Frontend Tests
-
-```bash
-cd frontend
-bun run test
-```
-
-### Smart Contract Tests
-
-```bash
-cd contracts
-bun run test
-```
-
-### Backend Tests
-
-```bash
-cd backend
-bun run test
-```
-
-## Deployment
-
-### Frontend
-
-- Netlify (Production)
-- Vercel (Staging)
-
-### Smart Contracts
-
-- Ethereum Mainnet
-- Ethereum Testnets (Goerli, Sepolia)
-
-### Backend
-
-- AWS (Production)
-- Heroku (Staging)
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+For more information, contact the DOB Protocol team or visit [dobprotocol.com](https://dobprotocol.com)
