@@ -67,12 +67,26 @@ const TOKENS: TokenInfo[] = [
   },
 ];
 
-const RWA_TOKENS = TOKENS.filter(token => token.isRWA);
+const RWA_TOKENS: TokenInfo[] = [
+  {
+    symbol: 'EHIVE',
+    name: 'E-Hive EV Charger',
+    apy: 18.7,
+    logo: '/Ehive-logo.png',
+    isRWA: true,
+  },
+  {
+    symbol: 'BASE3',
+    name: 'BASE3 Data Center',
+    apy: 14.2,
+    logo: 'https://img.icons8.com/color/96/000000/server.png',
+    isRWA: true,
+  },
+];
 
 const TokenMarketplaceWindow: React.FC = () => {
   const [fromAmount, setFromAmount] = useState('');
-  const [fromToken, setFromToken] = useState(RWA_TOKENS[0]);
-  const [showFromTokenModal, setShowFromTokenModal] = useState(false);
+  const [fromToken, setFromToken] = useState<TokenInfo>(RWA_TOKENS[0]);
 
   return (
     <div className="swap-container max-w-3xl w-full mx-auto rounded-2xl bg-white/70 border border-[#E3EAFD] shadow-lg p-8" style={{boxShadow: '0 4px 24px 0 rgba(80, 112, 255, 0.08)'}}>
@@ -82,16 +96,27 @@ const TokenMarketplaceWindow: React.FC = () => {
           {/* Invest in */}
           <div className="bg-white rounded-xl border border-[#E3EAFD] p-6">
             <div className="text-gray-700 text-base font-medium mb-4">Invest in</div>
-            <div className="w-full">
-              <button
-                className="flex items-center w-full px-4 py-3 border border-[#B6C5F5] rounded-xl bg-white text-gray-700 text-lg font-medium focus:outline-none focus:ring-2 focus:ring-[#B6C5F5]"
-                onClick={() => setShowFromTokenModal(true)}
-                type="button"
+            <div className="w-full relative">
+              <select
+                className="appearance-none w-full px-4 py-3 bg-white/80 border border-[#B6C5F5] rounded-xl text-gray-700 text-lg font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B6C5F5] transition-all"
+                value={fromToken.symbol}
+                aria-label="Select token to invest in"
+                onChange={e => {
+                  const selected = RWA_TOKENS.find(t => t.symbol === e.target.value);
+                  if (selected) setFromToken(selected);
+                }}
+                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none' }}
               >
-                <img src={fromToken.logo} alt={fromToken.name} className="w-6 h-6 mr-2" />
-                {fromToken.symbol}
-                <svg className="ml-auto" width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M6 8l4 4 4-4" stroke="#888" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </button>
+                {RWA_TOKENS.map(token => (
+                  <option key={token.symbol} value={token.symbol} className="text-gray-700 bg-white">
+                    {token.name}
+                  </option>
+                ))}
+              </select>
+              {/* Custom dropdown arrow */}
+              <div className="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M6 8l4 4 4-4" stroke="#888" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
             </div>
           </div>
 
@@ -143,13 +168,6 @@ const TokenMarketplaceWindow: React.FC = () => {
           Invest
         </Button>
       </div>
-      {/* Token modal */}
-      <TokenModal
-        isOpen={showFromTokenModal}
-        onClose={() => setShowFromTokenModal(false)}
-        onSelectToken={setFromToken}
-        tokens={RWA_TOKENS}
-      />
     </div>
   );
 };
