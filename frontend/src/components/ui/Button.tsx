@@ -21,7 +21,7 @@ const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     default: 'bg-white/15 backdrop-blur-sm text-white border border-white/15 hover:bg-white/25',
-    primary: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/20',
+    primary: 'bg-[#597CE9] text-white hover:bg-[#1A46CC] shadow-lg',
     secondary: 'bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/15',
     connect: 'bg-gradient-to-r from-indigo-600 to-purple-500 text-white hover:from-indigo-700 hover:to-purple-600 shadow-lg shadow-indigo-500/20',
   };
