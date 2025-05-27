@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import Button from './Button';
+import { ConnectWallet } from './ConnectWallet';
 
 interface NavbarProps {
   activeTab?: 'farm' | 'pools' | 'agents' | 'portfolio';
@@ -93,9 +94,9 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        <Button variant="connect">
-          Connect Wallet
-        </Button>
+        <div className="flex items-center">
+          <ConnectWallet />
+        </div>
       </div>
     </nav>
   );

@@ -1,43 +1,29 @@
 {
-  "name": "react-vite-tailwind",
+  "name": "dobswap",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "workspaces": [
+    "frontend",
+    "contracts",
+    "backend"
+  ],
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build --outDir dist",
-    "lint": "bunx biome lint --write && bunx tsc --noEmit",
-    "format": "bunx biome format --write",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "tailwindcss-animate": "^1.0.7"
+    "dev": "concurrently \"bun run dev:frontend\" \"bun run dev:backend\"",
+    "dev:frontend": "cd frontend && bun run dev",
+    "dev:backend": "cd backend && bun run dev",
+    "build": "concurrently \"bun run build:frontend\" \"bun run build:backend\"",
+    "build:frontend": "cd frontend && bun run build",
+    "build:backend": "cd backend && bun run build",
+    "test": "concurrently \"bun run test:frontend\" \"bun run test:backend\" \"bun run test:contracts\"",
+    "test:frontend": "cd frontend && bun run test",
+    "test:backend": "cd backend && bun run test",
+    "test:contracts": "cd contracts && bun run test",
+    "lint": "concurrently \"bun run lint:frontend\" \"bun run lint:backend\" \"bun run lint:contracts\"",
+    "lint:frontend": "cd frontend && bun run lint",
+    "lint:backend": "cd backend && bun run lint",
+    "lint:contracts": "cd contracts && bun run lint"
   },
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@biomejs/biome": "1.9.4",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-import-resolver-typescript": "^3.7.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-react-refresh": "^0.4.18",
-    "globals": "^15.14.0",
-    "postcss": "^8.5.1",
-    "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.6.10",
-    "tailwindcss": "^3.4.17",
-    "typescript": "~5.6.2",
-    "typescript-eslint": "^8.20.0",
-    "vite": "^6.0.5"
+    "concurrently": "^8.2.2"
   }
-}
+} 

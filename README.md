@@ -1,50 +1,159 @@
-# React + TypeScript + Vite
+# DOBSWAP Protocol
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A decentralized exchange for Real World Asset (RWA) tokens with verified revenue backing.
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+dobswap/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── contexts/        # React contexts
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── config/         # Configuration files
+│   │   ├── types/          # TypeScript type definitions
+│   │   ├── utils/          # Utility functions
+│   │   └── App.tsx         # Main application component
+│   ├── public/             # Static assets
+│   └── package.json        # Frontend dependencies
+│
+├── contracts/               # Smart contracts
+│   ├── src/                # Contract source files
+│   │   ├── core/          # Core protocol contracts
+│   │   ├── tokens/        # Token contracts
+│   │   ├── interfaces/    # Contract interfaces
+│   │   └── libraries/     # Contract libraries
+│   ├── test/              # Contract tests
+│   ├── scripts/           # Deployment scripts
+│   └── package.json       # Contract dependencies
+│
+├── backend/                # Backend services
+│   ├── src/               # Backend source code
+│   │   ├── api/          # API endpoints
+│   │   ├── services/     # Business logic
+│   │   ├── models/       # Data models
+│   │   └── utils/        # Utility functions
+│   └── package.json      # Backend dependencies
+│
+└── docs/                  # Documentation
+    ├── architecture/     # Architecture diagrams
+    ├── api/             # API documentation
+    └── contracts/       # Smart contract documentation
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Technology Stack
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Frontend
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+- React 18
+- TypeScript
+- TailwindCSS
+- Vite
+- Privy (Authentication)
+- Wagmi (Ethereum interactions)
+
+### Smart Contracts
+
+- Solidity
+- Hardhat
+- OpenZeppelin
+- Ethers.js
+
+### Backend
+
+- Node.js
+- Express
+- TypeScript
+- PostgreSQL
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Bun
+- Git
+
+### Frontend Setup
+
+```bash
+cd frontend
+bun install
+bun run dev
 ```
+
+### Smart Contract Setup
+
+```bash
+cd contracts
+bun install
+bun run compile
+```
+
+### Backend Setup
+
+```bash
+cd backend
+bun install
+bun run dev
+```
+
+## Development Workflow
+
+1. Create a new branch for your feature
+2. Make your changes
+3. Write tests
+4. Submit a pull request
+
+## Testing
+
+### Frontend Tests
+
+```bash
+cd frontend
+bun run test
+```
+
+### Smart Contract Tests
+
+```bash
+cd contracts
+bun run test
+```
+
+### Backend Tests
+
+```bash
+cd backend
+bun run test
+```
+
+## Deployment
+
+### Frontend
+
+- Netlify (Production)
+- Vercel (Staging)
+
+### Smart Contracts
+
+- Ethereum Mainnet
+- Ethereum Testnets (Goerli, Sepolia)
+
+### Backend
+
+- AWS (Production)
+- Heroku (Staging)
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
