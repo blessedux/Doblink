@@ -8,7 +8,7 @@
 
 ---
 
-## 🚀 Objectives
+## Objectives
 
 1. **Build a modern landing page** (marketing + docs + SEO) using Next.js + React + Tailwind.
 2. **Develop DOB Link:** a lightweight JS widget that any tokenized RWA project can embed to sell their tokens using fiat (via Stellar).
@@ -160,7 +160,7 @@ USD → (Stellar Anchor) → USDC → (Soroban Smart Contract) → Logged + Awai
 
 ---
 
-## 🎯 Success Metrics
+## Success Metrics
 
 - **Widget Load Time:** < 2 seconds
 - **Bundle Size:** < 100KB gzipped
