@@ -55,6 +55,7 @@ import { DobLinkWidget } from "doblink-sdk";
 
 ## Roadmap
 
+See `DRAPER_U_SPRINT.md` for the Draper University 2025 Program Technical Roadmap.
 See `TODO.md` for the current development plan and deliverables.
 
 ---
