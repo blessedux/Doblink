@@ -8,6 +8,7 @@ export interface DobLinkWidgetConfig {
   theme?: 'light' | 'dark';
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   customStyles?: Record<string, string>;
+  hash?: string; // Unique widget hash for tracking
 }
 
 // Main widget class
