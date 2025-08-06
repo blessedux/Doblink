@@ -40,9 +40,25 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
     try {
       // Mock API call - replace with actual API call later
       await new Promise(resolve => setTimeout(resolve, 1000));
-      onWidgetUpdate(widget.id, { is_active: !widget.is_active });
+      const newStatus = !widget.is_active;
+      console.log('Toggling widget status from', widget.is_active, 'to', newStatus);
+      onWidgetUpdate(widget.id, { is_active: newStatus });
     } catch (error) {
       console.error('Failed to update widget status:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReactivate = async () => {
+    setIsLoading(true);
+    try {
+      // Mock API call - replace with actual API call later
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Reactivating widget from', widget.is_active, 'to true');
+      onWidgetUpdate(widget.id, { is_active: true });
+    } catch (error) {
+      console.error('Failed to reactivate widget:', error);
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +117,10 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
                   ? 'bg-green-900 text-green-300' 
                   : 'bg-gray-700 text-gray-300'
               }`}>
-                {widget.is_active ? '🟢 Active' : '🔴 Inactive'}
+                <div className={`w-2 h-2 rounded-full mr-2 ${
+                  widget.is_active ? 'bg-green-400' : 'bg-red-400'
+                }`}></div>
+                {widget.is_active ? 'Active' : 'Inactive'}
               </span>
             </div>
             <p className="text-sm text-gray-400">{widget.hash}</p>
@@ -159,7 +178,7 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
 
               {/* Embed Code */}
               {widget.embed_code && (
-                <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 relative">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-medium text-white">Embed Code</h3>
                     <button
@@ -172,6 +191,41 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
                   <pre className="bg-gray-900 p-4 rounded text-sm text-gray-300 overflow-x-auto">
                     {widget.embed_code}
                   </pre>
+                  
+                  {/* Dark overlay and reactivate button when widget is paused */}
+                  {!widget.is_active && (
+                    <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-medium text-white mb-2">Widget is Paused</h3>
+                        <p className="text-gray-400 mb-4">
+                          This widget is currently paused and not active on your website.
+                        </p>
+                        <button
+                          onClick={handleReactivate}
+                          disabled={isLoading}
+                          className="bg-[#3E54D3] hover:bg-[#2E44C3] disabled:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto"
+                        >
+                          {isLoading ? (
+                            <>
+                              <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              </svg>
+                              <span>Reactivating...</span>
+                            </>
+                          ) : (
+                            <span>Reactivate Widget</span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -230,27 +284,27 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
               <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
                 <h3 className="text-lg font-medium text-white mb-4">Widget Settings</h3>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Widget Status
-                    </label>
-                    <div className="flex items-center space-x-4">
-                      <button
-                        onClick={handleToggleStatus}
-                        disabled={isLoading}
-                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                          widget.is_active
-                            ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
-                        } disabled:opacity-50`}
-                      >
-                        {isLoading ? 'Updating...' : widget.is_active ? 'Pause Widget' : 'Activate Widget'}
-                      </button>
-                      <span className="text-sm text-gray-400">
-                        {widget.is_active ? 'Widget is currently active and visible' : 'Widget is paused and hidden'}
-                      </span>
-                    </div>
-                  </div>
+                                     <div>
+                     <label className="block text-sm font-medium text-gray-300 mb-2">
+                       Widget Status
+                     </label>
+                     <div className="flex items-center space-x-4">
+                       <button
+                         onClick={handleToggleStatus}
+                         disabled={isLoading}
+                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                           widget.is_active
+                             ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                             : 'bg-[#3E54D3] hover:bg-[#2E44C3] text-white'
+                         } disabled:opacity-50`}
+                       >
+                         {isLoading ? 'Updating...' : widget.is_active ? 'Pause Widget' : 'Activate Widget'}
+                       </button>
+                       <span className="text-sm text-gray-400">
+                         {widget.is_active ? 'Widget is currently active and visible on your website' : 'Widget is paused and hidden from your website'}
+                       </span>
+                     </div>
+                   </div>
                   
                   <div className="border-t border-gray-700 pt-4">
                     <label className="block text-sm font-medium text-gray-300 mb-2">

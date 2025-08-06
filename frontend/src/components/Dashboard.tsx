@@ -42,6 +42,11 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   const handleWidgetUpdate = (widgetId: string, updates: any) => {
     onWidgetUpdate(widgetId, updates);
+    
+    // Update the selectedWidget state if it's the same widget
+    if (selectedWidget && selectedWidget.id === widgetId) {
+      setSelectedWidget({ ...selectedWidget, ...updates });
+    }
   };
 
   const handleWidgetDelete = (widgetId: string) => {
@@ -228,9 +233,9 @@ const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                   
                   <div className="flex items-center space-x-2 mb-4">
-                    <span className={getStatusColor(widget.is_active ? 'active' : 'inactive')}>
-                      {getStatusIcon(widget.is_active ? 'active' : 'inactive')}
-                    </span>
+                    <div className={`w-2 h-2 rounded-full ${
+                      widget.is_active ? 'bg-green-400' : 'bg-red-400'
+                    }`}></div>
                     <span className="text-sm text-gray-400">
                       {widget.is_active ? 'Widget is active' : 'Widget is inactive'}
                     </span>
@@ -281,7 +286,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                       </div>
                       
                       <div className="flex items-center space-x-2 mb-4">
-                        <span className="text-green-400">🟢</span>
+                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
                         <span className="text-sm text-gray-400">LP Active</span>
                         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

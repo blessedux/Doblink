@@ -223,11 +223,14 @@ function App() {
   };
 
   const handleWidgetUpdate = (widgetId: string, updates: Partial<MockWidget>) => {
-    setWidgets(prevWidgets => 
-      prevWidgets.map(widget => 
+    console.log('Updating widget', widgetId, 'with updates:', updates);
+    setWidgets(prevWidgets => {
+      const updatedWidgets = prevWidgets.map(widget => 
         widget.id === widgetId ? { ...widget, ...updates } : widget
-      )
-    );
+      );
+      console.log('Updated widgets:', updatedWidgets);
+      return updatedWidgets;
+    });
   };
 
   const handleWidgetDelete = (widgetId: string) => {
