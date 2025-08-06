@@ -62,6 +62,7 @@ const GuidedWidgetCreation: React.FC<GuidedWidgetCreationProps> = ({
   const [preferredCurrency, setPreferredCurrency] = useState('USD');
   const [showColorWheel, setShowColorWheel] = useState(false);
   const [selectedColorType, setSelectedColorType] = useState<'green' | 'blue' | null>(null);
+  const [copyFeedback, setCopyFeedback] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -165,10 +166,12 @@ const GuidedWidgetCreation: React.FC<GuidedWidgetCreationProps> = ({
   const copyEmbedCode = async (code: string) => {
     try {
       await navigator.clipboard.writeText(code);
-      alert('Embed code copied to clipboard!');
+      setCopyFeedback(true);
+      setTimeout(() => setCopyFeedback(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
-      alert('Failed to copy embed code');
+      setCopyFeedback(true);
+      setTimeout(() => setCopyFeedback(false), 2000);
     }
   };
 
@@ -524,9 +527,13 @@ const GuidedWidgetCreation: React.FC<GuidedWidgetCreationProps> = ({
                   <h4 className="text-white font-medium">Embed Code</h4>
                   <button
                     onClick={() => copyEmbedCode(createdWidget.embedCode)}
-                    className="text-[#3E54D3] hover:text-[#2E44C3] text-sm transition-colors"
+                    className={`text-sm transition-all duration-200 ${
+                      copyFeedback 
+                        ? 'text-green-400 scale-105' 
+                        : 'text-[#3E54D3] hover:text-[#2E44C3]'
+                    }`}
                   >
-                    Copy Code
+                    {copyFeedback ? 'Copied!' : 'Copy Code'}
                   </button>
                 </div>
                 <pre className="bg-gray-900 p-3 rounded text-xs text-gray-300 overflow-x-auto">

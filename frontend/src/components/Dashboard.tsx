@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import WidgetDetailModal from './WidgetDetailModal';
+import ProjectDetailModal from './ProjectDetailModal';
 
 interface DashboardProps {
   onShowGuidedWidgetCreation: () => void;
@@ -26,6 +27,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   const [activeTab, setActiveTab] = useState('widgets');
   const [selectedWidget, setSelectedWidget] = useState<any>(null);
   const [showWidgetDetail, setShowWidgetDetail] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [showProjectDetail, setShowProjectDetail] = useState(false);
 
   const handleSidebarMouseEnter = () => {
     setSidebarOpen(true);
@@ -38,6 +41,11 @@ const Dashboard: React.FC<DashboardProps> = ({
   const handleWidgetClick = (widget: any) => {
     setSelectedWidget(widget);
     setShowWidgetDetail(true);
+  };
+
+  const handleProjectClick = (project: any) => {
+    setSelectedProject(project);
+    setShowProjectDetail(true);
   };
 
   const handleWidgetUpdate = (widgetId: string, updates: any) => {
@@ -273,6 +281,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   {projects.map((project) => (
                     <div
                       key={project.id}
+                      onClick={() => handleProjectClick(project)}
                       className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-colors cursor-pointer"
                     >
                       <div className="flex items-start justify-between mb-4">
@@ -349,25 +358,109 @@ const Dashboard: React.FC<DashboardProps> = ({
           )}
 
           {activeTab === 'analytics' && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-white mb-4">Analytics Dashboard</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <p className="text-gray-400 text-sm">Total Views</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalViews.toLocaleString()}</p>
+            <div className="space-y-6">
+              {/* Summary Stats */}
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                <h3 className="text-lg font-medium text-white mb-4">Analytics Overview</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="bg-gray-700 rounded-lg p-4">
+                    <p className="text-gray-400 text-sm">Total Views</p>
+                    <p className="text-2xl font-bold text-white">{stats.totalViews.toLocaleString()}</p>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4">
+                    <p className="text-gray-400 text-sm">Total Revenue</p>
+                    <p className="text-2xl font-bold text-white">${stats.totalRevenue.toLocaleString()}</p>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4">
+                    <p className="text-gray-400 text-sm">Active Widgets</p>
+                    <p className="text-2xl font-bold text-white">{widgets.filter(w => w.is_active).length}</p>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4">
+                    <p className="text-gray-400 text-sm">Total Widgets</p>
+                    <p className="text-2xl font-bold text-white">{widgets.length}</p>
+                  </div>
                 </div>
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <p className="text-gray-400 text-sm">Total Revenue</p>
-                  <p className="text-2xl font-bold text-white">${stats.totalRevenue.toLocaleString()}</p>
-                </div>
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <p className="text-gray-400 text-sm">Active Widgets</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalWidgets}</p>
-                </div>
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <p className="text-gray-400 text-sm">Total Projects</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalProjects}</p>
-                </div>
+              </div>
+
+              {/* Widget Analytics Table */}
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                <h3 className="text-lg font-medium text-white mb-4">Widget Performance</h3>
+                {widgets.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-700">
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">Widget</th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">Status</th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">Views</th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">Revenue</th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">Conversions</th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">Tokens Sold</th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-medium">ID</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {widgets.map((widget) => (
+                          <tr key={widget.id} className="border-b border-gray-700 hover:bg-gray-750">
+                            <td className="py-4 px-4">
+                              <div>
+                                <p className="text-white font-medium">{widget.token_id}</p>
+                                <p className="text-gray-400 text-sm">{widget.hash}</p>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center space-x-2">
+                                <div className={`w-2 h-2 rounded-full ${
+                                  widget.is_active ? 'bg-green-400' : 'bg-red-400'
+                                }`}></div>
+                                <span className={`text-sm ${
+                                  widget.is_active ? 'text-green-400' : 'text-red-400'
+                                }`}>
+                                  {widget.is_active ? 'Active' : 'Paused'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <p className="text-white">{widget.views.toLocaleString()}</p>
+                            </td>
+                            <td className="py-4 px-4">
+                              <p className="text-white">${widget.revenue.toLocaleString()}</p>
+                            </td>
+                            <td className="py-4 px-4">
+                              <p className="text-white">{widget.conversions}%</p>
+                            </td>
+                            <td className="py-4 px-4">
+                              <p className="text-white">{widget.tokens_sold.toLocaleString()}</p>
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className="text-white font-mono text-sm bg-gray-700 px-2 py-1 rounded">
+                                {widget.token_id.substring(0, 3).toUpperCase()}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-white mb-2">No Widgets Found</h3>
+                    <p className="text-gray-400 mb-4">
+                      You haven't created any widgets yet. Create your first widget to see analytics data.
+                    </p>
+                    <button
+                      onClick={onShowGuidedWidgetCreation}
+                      className="bg-[#3E54D3] hover:bg-[#2E44C3] text-white px-6 py-2 rounded-lg transition-colors"
+                    >
+                      Create Widget
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -393,6 +486,16 @@ const Dashboard: React.FC<DashboardProps> = ({
         widget={selectedWidget}
         onWidgetUpdate={handleWidgetUpdate}
         onWidgetDelete={handleWidgetDelete}
+      />
+
+      {/* Project Detail Modal */}
+      <ProjectDetailModal
+        isOpen={showProjectDetail}
+        onClose={() => {
+          setShowProjectDetail(false);
+          setSelectedProject(null);
+        }}
+        project={selectedProject}
       />
     </div>
   );

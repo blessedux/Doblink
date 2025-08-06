@@ -32,6 +32,7 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'settings'>('overview');
+  const [copyFeedback, setCopyFeedback] = useState(false);
 
   if (!isOpen || !widget) return null;
 
@@ -83,10 +84,12 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
     if (widget.embed_code) {
       try {
         await navigator.clipboard.writeText(widget.embed_code);
-        alert('Embed code copied to clipboard!');
+        setCopyFeedback(true);
+        setTimeout(() => setCopyFeedback(false), 2000);
       } catch (err) {
         console.error('Failed to copy embed code:', err);
-        alert('Failed to copy embed code');
+        setCopyFeedback(true);
+        setTimeout(() => setCopyFeedback(false), 2000);
       }
     }
   };
@@ -183,9 +186,13 @@ const WidgetDetailModal: React.FC<WidgetDetailModalProps> = ({
                     <h3 className="text-lg font-medium text-white">Embed Code</h3>
                     <button
                       onClick={copyEmbedCode}
-                      className="text-[#3E54D3] hover:text-[#2E44C3] text-sm transition-colors"
+                      className={`text-sm transition-all duration-200 ${
+                        copyFeedback 
+                          ? 'text-green-400 scale-105' 
+                          : 'text-[#3E54D3] hover:text-[#2E44C3]'
+                      }`}
                     >
-                      Copy Code
+                      {copyFeedback ? 'Copied!' : 'Copy Code'}
                     </button>
                   </div>
                   <pre className="bg-gray-900 p-4 rounded text-sm text-gray-300 overflow-x-auto">

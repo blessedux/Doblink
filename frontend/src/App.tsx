@@ -91,11 +91,11 @@ const mockWidgets: MockWidget[] = [
   {
     id: 'widget-1',
     hash: 'dob-solar001-abc123',
-    token_id: 'SOLAR001',
+    token_id: 'SOL',
     theme: 'dark',
     position: 'bottom-right',
     project_id: 'proj-1',
-    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "SOLAR001",\n    backgroundColor: "#FFFFFF",\n    preferredCurrency: "USD",\n    hash: "dob-solar001-abc123"\n  }).mount();\n</script>',
+    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "SOL",\n    backgroundColor: "#FFFFFF",\n    preferredCurrency: "USD",\n    hash: "dob-solar001-abc123"\n  }).mount();\n</script>',
     active_links: 15,
     tokens_sold: 234,
     views: 1250,
@@ -107,11 +107,11 @@ const mockWidgets: MockWidget[] = [
   {
     id: 'widget-2',
     hash: 'dob-wind001-def456',
-    token_id: 'WIND001',
+    token_id: 'WND',
     theme: 'light',
     position: 'top-left',
     project_id: 'proj-2',
-    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "WIND001",\n    backgroundColor: "#F8F9FA",\n    preferredCurrency: "USD",\n    hash: "dob-wind001-def456"\n  }).mount();\n</script>',
+    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "WND",\n    backgroundColor: "#F8F9FA",\n    preferredCurrency: "USD",\n    hash: "dob-wind001-def456"\n  }).mount();\n</script>',
     active_links: 8,
     tokens_sold: 156,
     views: 890,
@@ -119,16 +119,48 @@ const mockWidgets: MockWidget[] = [
     revenue: 15600,
     is_active: false,
     created_at: '2024-01-18T14:30:00Z'
+  },
+  {
+    id: 'widget-3',
+    hash: 'dob-hydro001-ghi789',
+    token_id: 'HYD',
+    theme: 'light',
+    position: 'bottom-right',
+    project_id: 'proj-3',
+    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "HYD",\n    backgroundColor: "#E5F3FF",\n    preferredCurrency: "USD",\n    hash: "dob-hydro001-ghi789"\n  }).mount();\n</script>',
+    active_links: 12,
+    tokens_sold: 89,
+    views: 450,
+    conversions: 19.8,
+    revenue: 8900,
+    is_active: true,
+    created_at: '2024-02-01T09:15:00Z'
+  },
+  {
+    id: 'widget-4',
+    hash: 'dob-geo001-jkl012',
+    token_id: 'GEO',
+    theme: 'dark',
+    position: 'top-right',
+    project_id: 'proj-1',
+    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "GEO",\n    backgroundColor: "#F0F9FF",\n    preferredCurrency: "EUR",\n    hash: "dob-geo001-jkl012"\n  }).mount();\n</script>',
+    active_links: 6,
+    tokens_sold: 67,
+    views: 320,
+    conversions: 20.9,
+    revenue: 6700,
+    is_active: true,
+    created_at: '2024-01-25T16:45:00Z'
   }
 ];
 
 const mockStats: MockStats = {
   totalProjects: 3,
-  totalWidgets: 2,
-  activeLinks: 23,
-  totalViews: 2140,
-  totalTokensSold: 390,
-  totalRevenue: 39000
+  totalWidgets: 4,
+  activeLinks: 41,
+  totalViews: 2910,
+  totalTokensSold: 546,
+  totalRevenue: 54600
 };
 
 function App() {
