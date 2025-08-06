@@ -17,6 +17,8 @@ app.use(express.json());
 // In-memory storage (replace with database in production)
 let widgets = new Map();
 let analytics = [];
+let liquidityPools = new Map();
+let users = new Map();
 
 // Validation schemas
 const widgetSchema = Joi.object({
@@ -24,7 +26,8 @@ const widgetSchema = Joi.object({
   theme: Joi.string().valid('light', 'dark').default('dark'),
   position: Joi.string().valid('bottom-right', 'bottom-left', 'top-right', 'top-left').default('bottom-right'),
   customStyles: Joi.object().default({}),
-  projectId: Joi.string().required()
+  projectId: Joi.string().required(),
+  lpId: Joi.string().optional()
 });
 
 const analyticsSchema = Joi.object({
@@ -34,6 +37,26 @@ const analyticsSchema = Joi.object({
   userAgent: Joi.string().optional(),
   amount: Joi.number().optional(),
   currency: Joi.string().optional()
+});
+
+const liquidityPoolSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().optional(),
+  tokenSymbol: Joi.string().required(),
+  tokenAddress: Joi.string().required(),
+  lpAddress: Joi.string().required(),
+  network: Joi.string().required(),
+  lpType: Joi.string().valid('base', 'stellar', 'ethereum', 'polygon', 'arbitrum').required(),
+  walletAddress: Joi.string().required(),
+  totalLiquidity: Joi.number().default(0),
+  apy: Joi.number().default(0),
+  minInvestment: Joi.number().default(0),
+  maxInvestment: Joi.number().default(0)
+});
+
+const userSchema = Joi.object({
+  email: Joi.string().email().required(),
+  walletAddress: Joi.string().optional()
 });
 
 // Generate unique widget hash
@@ -52,6 +75,67 @@ const generateWidgetHash = (tokenId, projectId) => {
   return `dob-${Math.abs(hash).toString(36)}-${randomSuffix}`;
 };
 
+// Initialize sample data
+const initializeSampleData = () => {
+  // Sample user
+  const sampleUser = {
+    id: 'user-1',
+    email: 'demo@dobprotocol.com',
+    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    createdAt: new Date().toISOString()
+  };
+  users.set(sampleUser.id, sampleUser);
+
+  // Sample liquidity pools
+  const sampleLPs = [
+    {
+      id: 'lp-1',
+      name: 'Solar Energy LP',
+      description: 'Renewable energy investment liquidity pool',
+      tokenSymbol: 'SOLAR',
+      tokenAddress: '0x1234567890abcdef1234567890abcdef12345678',
+      lpAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
+      network: 'ethereum',
+      lpType: 'ethereum',
+      userId: 'user-1',
+      walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+      status: 'active',
+      totalLiquidity: 2400000.00,
+      apy: 12.5,
+      minInvestment: 10.00,
+      maxInvestment: 100000.00,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      id: 'lp-2',
+      name: 'Wind Power LP',
+      description: 'Wind energy infrastructure liquidity pool',
+      tokenSymbol: 'WIND',
+      tokenAddress: '0x2345678901bcdef2345678901bcdef2345678901',
+      lpAddress: '0xbcdef1234567890bcdef1234567890bcdef12345',
+      network: 'polygon',
+      lpType: 'polygon',
+      userId: 'user-1',
+      walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+      status: 'active',
+      totalLiquidity: 1560000.00,
+      apy: 15.2,
+      minInvestment: 25.00,
+      maxInvestment: 50000.00,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+  ];
+
+  sampleLPs.forEach(lp => {
+    liquidityPools.set(lp.id, lp);
+  });
+};
+
+// Initialize sample data
+initializeSampleData();
+
 // Routes
 
 // Health check
@@ -59,7 +143,255 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// User Management API
+
+// Get user by wallet address
+app.get('/api/users/wallet/:walletAddress', (req, res) => {
+  try {
+    const { walletAddress } = req.params;
+    const user = Array.from(users.values()).find(u => u.walletAddress === walletAddress);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      user: user
+    });
+  } catch (error) {
+    console.error('Error getting user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Create or update user
+app.post('/api/users', (req, res) => {
+  try {
+    const { error, value } = userSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    let user = Array.from(users.values()).find(u => u.walletAddress === value.walletAddress);
+    
+    if (user) {
+      // Update existing user
+      user = { ...user, ...value, updatedAt: new Date().toISOString() };
+      users.set(user.id, user);
+    } else {
+      // Create new user
+      user = {
+        id: uuidv4(),
+        ...value,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      users.set(user.id, user);
+    }
+
+    res.status(201).json({
+      success: true,
+      user: user
+    });
+  } catch (error) {
+    console.error('Error creating/updating user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Liquidity Pool Management API
+
+// Get liquidity pools by wallet address
+app.get('/api/liquidity-pools/wallet/:walletAddress', (req, res) => {
+  try {
+    const { walletAddress } = req.params;
+    const userLPs = Array.from(liquidityPools.values()).filter(lp => lp.walletAddress === walletAddress);
+
+    res.json({
+      success: true,
+      liquidityPools: userLPs
+    });
+  } catch (error) {
+    console.error('Error getting liquidity pools:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get liquidity pool by ID
+app.get('/api/liquidity-pools/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const lp = liquidityPools.get(id);
+
+    if (!lp) {
+      return res.status(404).json({ error: 'Liquidity pool not found' });
+    }
+
+    res.json({
+      success: true,
+      liquidityPool: lp
+    });
+  } catch (error) {
+    console.error('Error getting liquidity pool:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Create new liquidity pool
+app.post('/api/liquidity-pools', (req, res) => {
+  try {
+    const { error, value } = liquidityPoolSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const lp = {
+      id: uuidv4(),
+      ...value,
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    liquidityPools.set(lp.id, lp);
+
+    res.status(201).json({
+      success: true,
+      liquidityPool: lp
+    });
+  } catch (error) {
+    console.error('Error creating liquidity pool:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update liquidity pool
+app.put('/api/liquidity-pools/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const lp = liquidityPools.get(id);
+
+    if (!lp) {
+      return res.status(404).json({ error: 'Liquidity pool not found' });
+    }
+
+    const { error, value } = liquidityPoolSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const updatedLP = {
+      ...lp,
+      ...value,
+      updatedAt: new Date().toISOString()
+    };
+
+    liquidityPools.set(id, updatedLP);
+
+    res.json({
+      success: true,
+      liquidityPool: updatedLP
+    });
+  } catch (error) {
+    console.error('Error updating liquidity pool:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Widget Management API
+
+// Create new widget with guided flow
+app.post('/api/widgets/guided', (req, res) => {
+  try {
+    const { 
+      step, 
+      walletAddress, 
+      selectedLPId, 
+      projectName, 
+      projectDescription, 
+      tokenId, 
+      theme, 
+      position 
+    } = req.body;
+
+    // Step 1: Get user's liquidity pools
+    if (step === 'get-lps') {
+      const userLPs = Array.from(liquidityPools.values()).filter(lp => lp.walletAddress === walletAddress);
+      
+      return res.json({
+        success: true,
+        step: 'select-lp',
+        liquidityPools: userLPs
+      });
+    }
+
+    // Step 2: Create project with selected LP
+    if (step === 'create-project') {
+      if (!selectedLPId || !projectName) {
+        return res.status(400).json({ error: 'LP ID and project name are required' });
+      }
+
+      const project = {
+        id: uuidv4(),
+        name: projectName,
+        description: projectDescription || '',
+        color: '#3b82f6',
+        userId: 'user-1', // This would come from auth in production
+        lpId: selectedLPId,
+        createdAt: new Date().toISOString()
+      };
+
+      return res.json({
+        success: true,
+        step: 'create-widget',
+        project: project
+      });
+    }
+
+    // Step 3: Create widget
+    if (step === 'create-widget') {
+      if (!tokenId || !selectedLPId) {
+        return res.status(400).json({ error: 'Token ID and LP ID are required' });
+      }
+
+      const widgetHash = generateWidgetHash(tokenId, selectedLPId);
+      const now = new Date().toISOString();
+
+      const widget = {
+        hash: widgetHash,
+        tokenId: tokenId,
+        theme: theme || 'dark',
+        position: position || 'bottom-right',
+        customStyles: {},
+        projectId: uuidv4(), // This would be the actual project ID
+        lpId: selectedLPId,
+        embedCode: `https://dobprotocol.com/widget/${widgetHash}`,
+        activeLinks: 0,
+        tokensSold: 0,
+        views: 0,
+        conversions: 0,
+        revenue: 0,
+        createdAt: now,
+        lastUpdated: now,
+        isActive: true
+      };
+
+      widgets.set(widgetHash, widget);
+
+      return res.json({
+        success: true,
+        step: 'complete',
+        widget: widget
+      });
+    }
+
+    res.status(400).json({ error: 'Invalid step' });
+  } catch (error) {
+    console.error('Error in guided widget creation:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Create new widget
 app.post('/api/widgets', (req, res) => {
@@ -79,6 +411,7 @@ app.post('/api/widgets', (req, res) => {
       position: value.position,
       customStyles: value.customStyles,
       projectId: value.projectId,
+      lpId: value.lpId,
       embedCode: `https://dobprotocol.com/widget/${widgetHash}`,
       activeLinks: 0,
       tokensSold: 0,

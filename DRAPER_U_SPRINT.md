@@ -129,17 +129,19 @@ USD → (Stellar Anchor) → USDC → (Soroban Smart Contract) → Logged + Awai
 
 ## Development Phases
 
+new backend?
+
 ### Phase 1: Foundation
 
-- [ ] Set up Next.js project for landing page
-- [ ] Set up Vite + React project for embeddable widget
-- [ ] Create basic landing page layout
-- [ ] Design widget component architecture
-- [ ] Set up Soroban development environment
+- [x] Set up Next.js project for landing page
+- [x] Set up Vite + React project for embeddable widget
+- [x] Create basic landing page layout
+- [x] Design widget component architecture
+- [x] Set up Soroban development environment
 
 ### Phase 2: Core Widget
 
-- [ ] Build embeddable widget component
+- [x] Build embeddable widget component
 - [ ] Implement Stellar Anchor integration
 - [ ] Create Soroban smart contract
 - [ ] Add wallet connection functionality
