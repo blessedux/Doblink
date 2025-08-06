@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
+import WidgetDetailModal from './WidgetDetailModal';
 
 interface DashboardProps {
   onShowGuidedWidgetCreation: () => void;
@@ -7,6 +8,8 @@ interface DashboardProps {
   widgets: any[];
   projects: any[];
   stats: any;
+  onWidgetUpdate: (widgetId: string, updates: any) => void;
+  onWidgetDelete: (widgetId: string) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -14,11 +17,15 @@ const Dashboard: React.FC<DashboardProps> = ({
   onShowLiquidityPoolManager,
   widgets,
   projects,
-  stats
+  stats,
+  onWidgetUpdate,
+  onWidgetDelete
 }) => {
   const { address, isConnected } = useWallet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('widgets');
+  const [selectedWidget, setSelectedWidget] = useState<any>(null);
+  const [showWidgetDetail, setShowWidgetDetail] = useState(false);
 
   const handleSidebarMouseEnter = () => {
     setSidebarOpen(true);
@@ -26,6 +33,19 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   const handleSidebarMouseLeave = () => {
     setSidebarOpen(false);
+  };
+
+  const handleWidgetClick = (widget: any) => {
+    setSelectedWidget(widget);
+    setShowWidgetDetail(true);
+  };
+
+  const handleWidgetUpdate = (widgetId: string, updates: any) => {
+    onWidgetUpdate(widgetId, updates);
+  };
+
+  const handleWidgetDelete = (widgetId: string) => {
+    onWidgetDelete(widgetId);
   };
 
   const navigationItems = [
@@ -194,6 +214,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               {widgets.map((widget) => (
                 <div
                   key={widget.id}
+                  onClick={() => handleWidgetClick(widget)}
                   className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-colors cursor-pointer"
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -356,6 +377,18 @@ const Dashboard: React.FC<DashboardProps> = ({
           )}
         </div>
       </div>
+
+      {/* Widget Detail Modal */}
+      <WidgetDetailModal
+        isOpen={showWidgetDetail}
+        onClose={() => {
+          setShowWidgetDetail(false);
+          setSelectedWidget(null);
+        }}
+        widget={selectedWidget}
+        onWidgetUpdate={handleWidgetUpdate}
+        onWidgetDelete={handleWidgetDelete}
+      />
     </div>
   );
 };

@@ -87,15 +87,48 @@ const mockProjects: MockProject[] = [
   }
 ];
 
-const mockWidgets: MockWidget[] = [];
+const mockWidgets: MockWidget[] = [
+  {
+    id: 'widget-1',
+    hash: 'dob-solar001-abc123',
+    token_id: 'SOLAR001',
+    theme: 'dark',
+    position: 'bottom-right',
+    project_id: 'proj-1',
+    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "SOLAR001",\n    backgroundColor: "#FFFFFF",\n    preferredCurrency: "USD",\n    hash: "dob-solar001-abc123"\n  }).mount();\n</script>',
+    active_links: 15,
+    tokens_sold: 234,
+    views: 1250,
+    conversions: 18.7,
+    revenue: 23400,
+    is_active: true,
+    created_at: '2024-01-15T10:00:00Z'
+  },
+  {
+    id: 'widget-2',
+    hash: 'dob-wind001-def456',
+    token_id: 'WIND001',
+    theme: 'light',
+    position: 'top-left',
+    project_id: 'proj-2',
+    embed_code: '<script src="https://dobprotocol.com/link.js"></script>\n<script>\n  createDobLinkWidget({\n    tokenId: "WIND001",\n    backgroundColor: "#F8F9FA",\n    preferredCurrency: "USD",\n    hash: "dob-wind001-def456"\n  }).mount();\n</script>',
+    active_links: 8,
+    tokens_sold: 156,
+    views: 890,
+    conversions: 17.5,
+    revenue: 15600,
+    is_active: false,
+    created_at: '2024-01-18T14:30:00Z'
+  }
+];
 
 const mockStats: MockStats = {
   totalProjects: 3,
-  totalWidgets: 0,
-  activeLinks: 0,
-  totalViews: 0,
-  totalTokensSold: 0,
-  totalRevenue: 0
+  totalWidgets: 2,
+  activeLinks: 23,
+  totalViews: 2140,
+  totalTokensSold: 390,
+  totalRevenue: 39000
 };
 
 function App() {
@@ -189,6 +222,18 @@ function App() {
     setShowGuidedWidgetCreation(false);
   };
 
+  const handleWidgetUpdate = (widgetId: string, updates: Partial<MockWidget>) => {
+    setWidgets(prevWidgets => 
+      prevWidgets.map(widget => 
+        widget.id === widgetId ? { ...widget, ...updates } : widget
+      )
+    );
+  };
+
+  const handleWidgetDelete = (widgetId: string) => {
+    setWidgets(prevWidgets => prevWidgets.filter(widget => widget.id !== widgetId));
+  };
+
   return (
     <>
       <Dashboard
@@ -197,6 +242,8 @@ function App() {
         widgets={widgets}
         projects={projects}
         stats={stats}
+        onWidgetUpdate={handleWidgetUpdate}
+        onWidgetDelete={handleWidgetDelete}
       />
 
       {/* Guided Widget Creation Modal */}
