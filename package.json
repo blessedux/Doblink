@@ -1,29 +1,42 @@
 {
-  "name": "doblink",
+  "name": "dob-link",
   "version": "1.0.0",
+  "description": "DOB Link - Web3 on-ramp widget platform",
   "private": true,
   "workspaces": [
-    "frontend",
-    "contracts",
-    "backend"
+    "dob-link-dashboard",
+    "dob-link-widget",
+    "dob-link-shared"
   ],
   "scripts": {
-    "dev": "concurrently \"bun run dev:frontend\" \"bun run dev:backend\"",
-    "dev:frontend": "cd frontend && bun run dev",
-    "dev:backend": "cd backend && bun run dev",
-    "build": "concurrently \"bun run build:frontend\" \"bun run build:backend\"",
-    "build:frontend": "cd frontend && bun run build",
-    "build:backend": "cd backend && bun run build",
-    "test": "concurrently \"bun run test:frontend\" \"bun run test:backend\" \"bun run test:contracts\"",
-    "test:frontend": "cd frontend && bun run test",
-    "test:backend": "cd backend && bun run test",
-    "test:contracts": "cd contracts && bun run test",
-    "lint": "concurrently \"bun run lint:frontend\" \"bun run lint:backend\" \"bun run lint:contracts\"",
-    "lint:frontend": "cd frontend && bun run lint",
-    "lint:backend": "cd backend && bun run lint",
-    "lint:contracts": "cd contracts && bun run lint"
+    "dev": "concurrently \"npm run dev:dashboard\" \"npm run dev:widget\"",
+    "dev:dashboard": "cd dob-link-dashboard && npm run dev",
+    "dev:widget": "cd dob-link-widget && npm run dev",
+    "build": "npm run build:dashboard && npm run build:widget",
+    "build:dashboard": "cd dob-link-dashboard && npm run build",
+    "build:widget": "cd dob-link-widget && npm run build",
+    "install:all": "npm install && cd dob-link-dashboard && npm install && cd ../dob-link-widget && npm install",
+    "clean": "rm -rf node_modules dob-link-dashboard/node_modules dob-link-widget/node_modules",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blessedux/dob_link.git"
+  },
+  "keywords": [
+    "web3",
+    "widget",
+    "on-ramp",
+    "tokens",
+    "blockchain"
+  ],
+  "author": "DOB Protocol",
+  "license": "MIT"
 } 

@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dob-link-dashboard/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "dob-link-widget/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/widget/(.*)",
+      "dest": "/dob-link-widget/dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dob-link-dashboard/$1"
+    }
+  ]
+} 
