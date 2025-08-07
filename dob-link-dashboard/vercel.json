@@ -8,10 +8,5 @@
     "app/api/**/*.ts": {
       "runtime": "nodejs18.x"
     }
-  },
-  "env": {
-    "NEXT_PUBLIC_API_URL": "@dob-api-url",
-    "NEXT_PUBLIC_SUPABASE_URL": "@dob-supabase-url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@dob-supabase-anon-key"
   }
 } 
