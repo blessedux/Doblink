@@ -23,7 +23,7 @@ USD → (Stellar Anchor) → USDC → (Soroban Smart Contract) → Logged + Awai
 ```
 
 - **Frontend** = JS/Vite-based embeddable widget
-- **Backend** = Soroban smart contract on Stellar + PostgreSQL (Supabase)
+- **Backend** = Soroban smart contract on Stellar + PostgreSQL
 
 ---
 
