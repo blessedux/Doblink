@@ -1,25 +1,41 @@
 {
-  "name": "@dobswap/contracts",
+  "name": "@dobprotocol/contracts",
   "version": "1.0.0",
+  "description": "DOB Protocol Soroban Smart Contracts",
   "private": true,
   "scripts": {
-    "compile": "hardhat compile",
-    "test": "hardhat test",
-    "deploy": "hardhat run scripts/deploy.ts",
-    "lint": "solhint 'src/**/*.sol'",
-    "format": "prettier --write 'src/**/*.sol'"
+    "build": "soroban contract build",
+    "test": "soroban contract test",
+    "deploy:testnet": "soroban contract deploy --network testnet",
+    "deploy:mainnet": "soroban contract deploy --network mainnet",
+    "invoke": "soroban contract invoke",
+    "bump": "soroban contract bump",
+    "lint": "cargo clippy",
+    "format": "cargo fmt",
+    "clean": "cargo clean"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.1"
+    "soroban-sdk": "^20.0.0"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "@typechain/ethers-v6": "^0.4.0",
-    "@typechain/hardhat": "^8.0.0",
-    "hardhat": "^2.19.5",
-    "prettier": "^3.2.5",
-    "prettier-plugin-solidity": "^1.1.3",
-    "solhint": "^3.5.1",
-    "typechain": "^8.3.1"
-  }
+    "soroban-cli": "^20.0.0",
+    "@stellar/soroban-client": "^0.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "rust": ">=1.70.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blessedux/dob_link.git"
+  },
+  "keywords": [
+    "soroban",
+    "stellar",
+    "smart-contracts",
+    "rust",
+    "web3"
+  ],
+  "author": "DOB Protocol",
+  "license": "MIT"
 } 
