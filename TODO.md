@@ -34,12 +34,12 @@
 
 ### Smart Contract Development
 
-- [x] Set up Soroban development environment
-- [x] Create basic contract structure with Rust
-- [x] Implement investment and token info data structures
-- [x] Add contract functions for investment management
-- [x] Create comprehensive test suite
-- [x] Handle Soroban-specific error types and storage
+- [ ] Set up Soroban development environment
+- [ ] Create basic contract structure with Rust
+- [ ] Implement investment and token info data structures
+- [ ] Add contract functions for investment management
+- [ ] Create comprehensive test suite
+- [ ] Handle Soroban-specific error types and storage
 
 ### Backend API Development ✅
 
@@ -75,21 +75,257 @@
 
 ### Smart Contract Integration
 
-- [ ] Test deployment on Stellar testnet
-- [ ] Complete Soroban contract functionality
-- [ ] Implement USDC deposit acceptance
-- [ ] Add event logging for off-chain relay
-- [ ] Integrate contract calls with frontend widget
-- [ ] Add transaction status tracking
+- [ ] **Install and configure Soroban development environment**
+
+  - [ ] Install Soroban CLI and Rust toolchain
+  - [ ] Set up Stellar testnet configuration
+  - [ ] Configure contract deployment scripts
+
+- [ ] **Complete Soroban contract development**
+
+  - [ ] Build and test the investment contract
+  - [ ] Add USDC token integration
+  - [ ] Implement event logging for off-chain relay
+  - [ ] Add comprehensive error handling
+
+- [ ] **Deploy and test on Stellar testnet**
+
+  - [ ] Deploy contract to Stellar testnet
+  - [ ] Test USDC deposit acceptance
+  - [ ] Verify event emission and logging
+  - [ ] Test contract integration with backend
+
+- [ ] **Frontend widget integration**
+
+  - [ ] Integrate contract calls with widget
+  - [ ] Add transaction status tracking
+  - [ ] Implement wallet connection for Stellar
+  - [ ] Add transaction confirmation UI
+
+- [ ] **Production deployment**
+  - [ ] Deploy to Stellar mainnet
+  - [ ] Set up monitoring and alerting
+  - [ ] Configure backup and recovery
+  - [ ] Document contract addresses and ABIs
 
 ### Widget Distribution & CDN
 
-- [ ] Create CDN-ready JS bundle optimization
-- [ ] Implement script tag injection system
-- [ ] Add data attributes for customization
-- [ ] Create DOM mounting in specific elements
-- [ ] Set up CDN distribution pipeline
-- [ ] Add versioning and cache busting
+#### Phase 1: Backend API Enhancement for Widget Data
+
+**Objective:** Create API endpoints to serve real-time LP data from DOB Protocol database
+
+- [ ] **1.1 Create Widget Data Endpoint**
+
+  - [ ] Add `GET /api/widgets/:hash/data` endpoint
+  - [ ] Return complete widget config + LP data + project info
+  - [ ] Include real-time APR, TVL, and investment limits
+  - [ ] Add proper error handling and validation
+
+- [ ] **1.2 Create Real-Time Data Endpoint**
+
+  - [ ] Add `GET /api/liquidity-pools/:id/real-time` endpoint
+  - [ ] Return live APR and TVL updates
+  - [ ] Implement caching strategy (5-10 second intervals)
+  - [ ] Add timestamp for data freshness
+
+- [ ] **1.3 Enhance Analytics Tracking**
+
+  - [ ] Update `POST /api/analytics/widget-event` endpoint
+  - [ ] Add widget load, view, interaction tracking
+  - [ ] Track real-time data fetch events
+  - [ ] Implement domain-based analytics
+
+- [ ] **1.4 Database Schema Updates**
+  - [ ] Add `cdn_version` field to widgets table
+  - [ ] Add `last_data_update` timestamp to liquidity_pools
+  - [ ] Add `data_update_frequency` field (in seconds)
+  - [ ] Create indexes for widget data queries
+
+#### Phase 2: Widget Bundle Optimization
+
+**Objective:** Create CDN-ready, optimized JavaScript bundle
+
+- [ ] **2.1 Configure Vite Build for CDN**
+
+  - [ ] Update `vite.config.ts` for library build
+  - [ ] Set up IIFE and ES module formats
+  - [ ] Configure external dependencies (React, ReactDOM)
+  - [ ] Enable minification and tree shaking
+
+- [ ] **2.2 Optimize Bundle Size**
+
+  - [ ] Implement code splitting for non-critical features
+  - [ ] Lazy load wallet integration components
+  - [ ] Inline critical CSS for faster rendering
+  - [ ] Target bundle size < 100KB gzipped
+
+- [ ] **2.3 Enhance Widget Entry Point**
+
+  - [ ] Update `src/widget.tsx` for CDN distribution
+  - [ ] Add automatic data fetching from API
+  - [ ] Implement real-time updates (10-second intervals)
+  - [ ] Add error handling and fallback states
+
+- [ ] **2.4 Add Data Attributes Support**
+  - [ ] Support `data-hash`, `data-theme`, `data-position`
+  - [ ] Add `data-mount-id` for specific element mounting
+  - [ ] Implement `data-custom-styles` for CSS customization
+  - [ ] Add `data-auto-start` for automatic initialization
+
+#### Phase 3: CDN Infrastructure Setup
+
+**Objective:** Set up global CDN distribution pipeline
+
+- [ ] **3.1 Cloudflare CDN Configuration**
+
+  - [ ] Set up Cloudflare account and custom domain
+  - [ ] Configure `cdn.dobprotocol.com` subdomain
+  - [ ] Set up SSL certificates and security headers
+  - [ ] Configure caching rules and TTL settings
+
+- [ ] **3.2 File Structure Setup**
+
+  - [ ] Create versioned file structure (`/v1.0.0/`, `/latest/`)
+  - [ ] Set up symlinks for latest version
+  - [ ] Create health check endpoint
+  - [ ] Add asset optimization (images, fonts)
+
+- [ ] **3.3 Build and Deployment Pipeline**
+
+  - [ ] Create `npm run build:cdn` script
+  - [ ] Set up automated deployment to Cloudflare
+  - [ ] Add version tagging and release process
+  - [ ] Implement rollback mechanism
+
+- [ ] **3.4 Performance Optimization**
+  - [ ] Enable Gzip and Brotli compression
+  - [ ] Set up resource hints (DNS prefetch, preconnect)
+  - [ ] Configure cache headers for optimal performance
+  - [ ] Add subresource integrity (SRI) support
+
+#### Phase 4: Embed System Implementation
+
+**Objective:** Create seamless embed experience for any website
+
+- [ ] **4.1 Script Tag Injection System**
+
+  - [ ] Create self-executing widget loader
+  - [ ] Add automatic DOM detection and mounting
+  - [ ] Implement conflict detection and resolution
+  - [ ] Add loading states and error handling
+
+- [ ] **4.2 Embed Code Generation**
+
+  - [ ] Create `POST /api/widgets/:hash/embed-code` endpoint
+  - [ ] Generate multiple embed formats (script, React, iframe)
+  - [ ] Add copy-to-clipboard functionality
+  - [ ] Include usage examples and documentation
+
+- [ ] **4.3 Cross-Origin Support**
+
+  - [ ] Configure CORS headers for widget API calls
+  - [ ] Add JSONP fallback for older browsers
+  - [ ] Implement postMessage for iframe communication
+  - [ ] Handle same-origin policy restrictions
+
+- [ ] **4.4 Widget Customization**
+  - [ ] Support theme customization (light/dark)
+  - [ ] Add position options (bottom-right, top-left, etc.)
+  - [ ] Implement custom CSS injection
+  - [ ] Add responsive design for mobile devices
+
+#### Phase 5: Real-Time Data Integration
+
+**Objective:** Connect widget to live DOB Protocol database
+
+- [ ] **5.1 Database Connection Setup**
+
+  - [ ] Connect widget to existing Supabase database
+  - [ ] Set up read-only access for widget data
+  - [ ] Implement connection pooling and optimization
+  - [ ] Add database health monitoring
+
+- [ ] **5.2 Real-Time Data Flow**
+
+  - [ ] Fetch initial LP data on widget load
+  - [ ] Set up WebSocket or polling for live updates
+  - [ ] Update APR and TVL with fade animations
+  - [ ] Handle data fetch errors gracefully
+
+- [ ] **5.3 Data Validation and Security**
+
+  - [ ] Validate all data from database
+  - [ ] Implement rate limiting for API calls
+  - [ ] Add data sanitization and XSS protection
+  - [ ] Set up API key authentication for sensitive data
+
+- [ ] **5.4 Performance Monitoring**
+  - [ ] Track widget load times and performance
+  - [ ] Monitor API response times
+  - [ ] Add error tracking and alerting
+  - [ ] Implement analytics for user interactions
+
+#### Phase 6: Testing and Quality Assurance
+
+**Objective:** Ensure widget works across all environments
+
+- [ ] **6.1 Cross-Browser Testing**
+
+  - [ ] Test on Chrome, Firefox, Safari, Edge
+  - [ ] Test on mobile browsers (iOS Safari, Chrome Mobile)
+  - [ ] Verify functionality on older browser versions
+  - [ ] Test with JavaScript disabled (graceful degradation)
+
+- [ ] **6.2 Integration Testing**
+
+  - [ ] Test widget embedding on different website types
+  - [ ] Verify data fetching from DOB Protocol database
+  - [ ] Test real-time updates and error handling
+  - [ ] Validate analytics tracking accuracy
+
+- [ ] **6.3 Performance Testing**
+
+  - [ ] Test load times on 3G/4G connections
+  - [ ] Verify bundle size and optimization
+  - [ ] Test CDN performance across different regions
+  - [ ] Monitor memory usage and cleanup
+
+- [ ] **6.4 Security Testing**
+  - [ ] Test for XSS vulnerabilities
+  - [ ] Verify CORS configuration
+  - [ ] Test API rate limiting
+  - [ ] Validate data sanitization
+
+#### Phase 7: Production Deployment
+
+**Objective:** Deploy to production with monitoring and maintenance
+
+- [ ] **7.1 Production Environment Setup**
+
+  - [ ] Configure production CDN endpoints
+  - [ ] Set up monitoring and alerting
+  - [ ] Configure error tracking (Sentry, etc.)
+  - [ ] Set up backup and disaster recovery
+
+- [ ] **7.2 Documentation and Support**
+
+  - [ ] Create comprehensive embed documentation
+  - [ ] Add troubleshooting guides
+  - [ ] Create developer API documentation
+  - [ ] Set up support channels and FAQ
+
+- [ ] **7.3 Monitoring and Maintenance**
+
+  - [ ] Set up uptime monitoring
+  - [ ] Configure performance alerts
+  - [ ] Implement automated health checks
+  - [ ] Create maintenance procedures
+
+- [ ] **7.4 Version Management**
+  - [ ] Implement semantic versioning
+  - [ ] Set up automated version tagging
+  - [ ] Create migration guides for breaking changes
+  - [ ] Maintain backward compatibility
 
 ### Stellar Integration
 
