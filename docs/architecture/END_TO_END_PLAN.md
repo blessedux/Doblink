@@ -9,16 +9,19 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
 ## 🚀 **Phase 1: Fiat to USDC On-Ramp (USD → USDC on Stellar)**
 
 ### **Step 1.1: User Initiates Investment**
+
 - **User Action**: Clicks widget on partner website
 - **Widget Behavior**: Displays investment interface with token details
-- **Technical Implementation**: 
-  - Widget loads from CDN (`https://cdn.dobprotocol.com/widget.js`)
+- **Technical Implementation**:
+  - Widget loads from backend (`https://api.dobprotocol.com/widget/:hash/script?api_key=KEY`)
+  - Backend generates complete widget JavaScript with domain validation
   - Fetches project metadata from backend API
   - Displays token info, APY, investment range
 
 ### **Step 1.2: USD Amount Input & Validation**
+
 - **User Action**: Enters USD investment amount
-- **Validation**: 
+- **Validation**:
   - Minimum investment: $10
   - Maximum investment: $100,000
   - Real-time amount validation
@@ -28,8 +31,9 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Error handling for invalid amounts
 
 ### **Step 1.3: Stellar Anchor Directory Query**
+
 - **System Action**: Query Stellar Anchor Directory for USD anchors
-- **Filter Criteria**: 
+- **Filter Criteria**:
   - AlchemyPay-enabled anchors
   - Best rates and compliance
   - Geographic availability
@@ -39,6 +43,7 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Caching for performance optimization
 
 ### **Step 1.4: SEP-24 Interactive Deposit Flow**
+
 - **User Action**: Completes KYC and payment via anchor
 - **Payment Methods**: Apple Pay, Google Pay, credit/debit cards
 - **Technical Implementation**:
@@ -48,8 +53,9 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Webhook integration for payment confirmations
 
 ### **Step 1.5: USDC Issuance to User Wallet**
+
 - **System Action**: Anchor issues USDC to user's Stellar wallet
-- **Wallet Creation**: 
+- **Wallet Creation**:
   - WebAuthn/Passkey-secured wallet generation
   - Device-dependent key storage
   - Fallback to Freighter integration
@@ -64,6 +70,7 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
 ## 🔄 **Phase 2: USDC to Protocol Vault (USDC → Protocol Vault)**
 
 ### **Step 2.1: USDC Balance Verification**
+
 - **System Action**: Verify USDC received in user's wallet
 - **Verification Process**:
   - Check USDC balance on Stellar
@@ -75,18 +82,22 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Balance monitoring system
 
 ### **Step 2.2: Soroban Contract Integration**
-- **System Action**: Transfer USDC to protocol vault contract
+
+- **System Action**: Transfer USDC to protocol vault contract via AlchemyPay routing
 - **Contract Functions**:
   - Accept USDC deposits
+  - Route payments through AlchemyPay
   - Store investor information
   - Emit investment events
 - **Technical Implementation**:
   - Soroban SDK integration
+  - AlchemyPay routing logic
   - Contract function calls
   - Event emission for off-chain processing
   - Transaction status tracking
 
 ### **Step 2.3: Investment Logging & Storage**
+
 - **System Action**: Log investment details in database
 - **Stored Information**:
   - User wallet address
@@ -100,6 +111,7 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Audit trail creation
 
 ### **Step 2.4: Protocol Vault Management**
+
 - **System Action**: Manage USDC in protocol vault
 - **Vault Operations**:
   - USDC aggregation from multiple investors
@@ -116,6 +128,7 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
 ## 🎁 **Phase 3: Token Delivery (Protocol Vault → User Wallet)**
 
 ### **Step 3.1: Token Minting & Distribution**
+
 - **System Action**: Mint protocol tokens based on USDC investment
 - **Token Calculation**:
   - USD amount × exchange rate = token quantity
@@ -128,8 +141,9 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Gas fee optimization
 
 ### **Step 3.2: Cross-Chain Bridge (Stellar → Target Chain)**
+
 - **System Action**: Bridge tokens to user's preferred network
-- **Supported Networks**: 
+- **Supported Networks**:
   - Ethereum (Base, Polygon)
   - Arbitrum
   - Stellar (native)
@@ -140,6 +154,7 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
   - Fallback mechanisms
 
 ### **Step 3.3: Final Token Delivery**
+
 - **System Action**: Deliver tokens to user's wallet
 - **Delivery Process**:
   - Token transfer to user address
@@ -156,6 +171,7 @@ This document defines the complete user flow from **fiat (USD) → USDC on Stell
 ## 🏗️ **Technical Architecture**
 
 ### **Frontend Components**
+
 ```
 dob-link-dashboard/     # Next.js Admin Panel
 dob-link-widget/        # Vite Widget (16.6KB gzipped)
@@ -163,6 +179,7 @@ dob-link-shared/        # Shared utilities and types
 ```
 
 ### **Backend Services**
+
 ```
 backend/
 ├── api/                # Express.js API server
@@ -172,6 +189,7 @@ backend/
 ```
 
 ### **Smart Contracts**
+
 ```
 soroban-contracts/
 ├── dob-link/           # Main contract
@@ -180,6 +198,7 @@ soroban-contracts/
 ```
 
 ### **Database Schema**
+
 ```
 supabase/
 ├── users               # User profiles and wallets
@@ -195,24 +214,28 @@ supabase/
 ## 📋 **Implementation Timeline**
 
 ### **Week 1-2: Phase 1 Foundation**
+
 - [ ] Set up Stellar Anchor Directory integration
 - [ ] Implement SEP-24 protocol compliance
 - [ ] Create WebAuthn wallet generation
 - [ ] Build USD input and validation system
 
 ### **Week 3-4: Phase 2 Core**
+
 - [ ] Deploy Soroban vault contract
 - [ ] Implement USDC transfer system
 - [ ] Create investment logging system
 - [ ] Set up vault management interface
 
 ### **Week 5-6: Phase 3 Delivery**
+
 - [ ] Build token minting system
 - [ ] Implement cross-chain bridge
 - [ ] Create delivery confirmation system
 - [ ] Set up monitoring and analytics
 
 ### **Week 7-8: Integration & Testing**
+
 - [ ] End-to-end testing
 - [ ] Security audit
 - [ ] Performance optimization
@@ -223,6 +246,7 @@ supabase/
 ## 🔒 **Security & Compliance**
 
 ### **Security Measures**
+
 - Multi-signature wallet controls
 - Rate limiting and DDoS protection
 - Input validation and sanitization
@@ -230,6 +254,7 @@ supabase/
 - Audit logging and monitoring
 
 ### **Compliance Requirements**
+
 - KYC/AML via Stellar anchors
 - Regulatory reporting capabilities
 - Data privacy and GDPR compliance
@@ -241,12 +266,14 @@ supabase/
 ## 📊 **Success Metrics**
 
 ### **Performance Targets**
+
 - **Widget Load Time**: < 0.5 seconds
 - **Complete User Flow**: < 10 seconds
 - **Transaction Success Rate**: > 99%
 - **System Uptime**: > 99.9%
 
 ### **Business Metrics**
+
 - **User Conversion Rate**: > 20%
 - **Average Investment Size**: $500
 - **Monthly Transaction Volume**: $100,000+
@@ -257,11 +284,13 @@ supabase/
 ## 🚨 **Risk Mitigation**
 
 ### **Technical Risks**
+
 - **Smart Contract Vulnerabilities**: Multiple audits, gradual deployment
 - **Bridge Security**: Multi-signature controls, monitoring
 - **Performance Issues**: CDN optimization, caching strategies
 
 ### **Business Risks**
+
 - **Regulatory Changes**: Flexible architecture, compliance monitoring
 - **Market Volatility**: Real-time rate updates, risk management
 - **Competition**: Unique features, strong partnerships
@@ -271,18 +300,21 @@ supabase/
 ## 🎯 **Next Steps**
 
 ### **Immediate Actions (This Week)**
+
 1. **Set up Stellar development environment**
 2. **Research and test Stellar anchors**
 3. **Begin SEP-24 protocol implementation**
 4. **Create detailed technical specifications**
 
 ### **Short-term Goals (Next 2 Weeks)**
+
 1. **Complete Phase 1 implementation**
 2. **Deploy and test Soroban contracts**
 3. **Set up monitoring and analytics**
 4. **Begin Phase 2 development**
 
 ### **Long-term Vision (Next Month)**
+
 1. **Full end-to-end implementation**
 2. **Production deployment**
 3. **Partner onboarding**
@@ -301,4 +333,3 @@ supabase/
 ---
 
 **This plan provides a clear roadmap for implementing the complete DOB LINK ecosystem, from fiat on-ramp to token delivery, ensuring a seamless user experience while maintaining security and compliance standards.**
-
