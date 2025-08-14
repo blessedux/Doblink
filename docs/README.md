@@ -16,7 +16,6 @@
 
 ### [API & Integration](./api/)
 
-- **CDN_DEPLOYMENT_PLAN.md** - Widget CDN deployment strategy
 - **LP_WIDGET_INTEGRATION_SUMMARY.md** - Liquidity pool and widget integration
 - **supabase-schema.sql** - Database schema and structure
 
@@ -28,7 +27,7 @@
 
 1. **New to the project?** Start with [TODO.md](./TODO.md) for an overview of current tasks
 2. **Understanding the architecture?** Read [END_TO_END_PLAN.md](./architecture/END_TO_END_PLAN.md)
-3. **Working on API integration?** Check [CDN_DEPLOYMENT_PLAN.md](./api/CDN_DEPLOYMENT_PLAN.md)
+3. **Working on API integration?** Check [LP_WIDGET_INTEGRATION_SUMMARY.md](./api/LP_WIDGET_INTEGRATION_SUMMARY.md)
 4. **Deploying?** Review [deploy.sh](./architecture/deploy.sh)
 
 ## Related Resources

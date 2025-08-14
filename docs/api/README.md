@@ -2,15 +2,7 @@
 
 ## Documentation Index
 
-### [CDN_DEPLOYMENT_PLAN.md](./CDN_DEPLOYMENT_PLAN.md)
 
-Comprehensive widget CDN deployment strategy:
-
-- CDN infrastructure setup
-- Widget bundle optimization
-- Distribution pipeline
-- Performance monitoring
-- Security considerations
 
 ### [LP_WIDGET_INTEGRATION_SUMMARY.md](./LP_WIDGET_INTEGRATION_SUMMARY.md)
 
@@ -34,7 +26,6 @@ Database schema and structure:
 
 ## Quick Navigation
 
-- **Widget Deployment**: [CDN_DEPLOYMENT_PLAN.md](./CDN_DEPLOYMENT_PLAN.md)
 - **Integration Guide**: [LP_WIDGET_INTEGRATION_SUMMARY.md](./LP_WIDGET_INTEGRATION_SUMMARY.md)
 - **Database Schema**: [supabase-schema.sql](./supabase-schema.sql)
 
@@ -60,7 +51,7 @@ Database schema and structure:
 
 ### Data Flow
 
-1. Widget loads from CDN
+1. Widget loads from backend with API key
 2. Fetches configuration from API
 3. Real-time data updates
 4. User interaction tracking

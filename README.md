@@ -60,7 +60,7 @@ The Soroban smart contracts handle:
 ## Technical Stack
 
 - **Frontend**: React, TypeScript, Tailwind CSS, Vite
-- **Widget Distribution**: CDN-ready JavaScript bundles
+- **Widget Distribution**: Backend-generated JavaScript with API key authentication
 - **Blockchain**: Soroban (Stellar L1), Rust smart contracts
 - **Analytics**: Real-time tracking and performance metrics
 
@@ -120,7 +120,6 @@ The platform provides a complete solution for creating and managing embeddable i
 
 ### [API & Integration](./api/)
 
-- **CDN_DEPLOYMENT_PLAN.md** - Widget CDN deployment strategy
 - **LP_WIDGET_INTEGRATION_SUMMARY.md** - Liquidity pool and widget integration
 - **supabase-schema.sql** - Database schema and structure
 
@@ -132,7 +131,7 @@ The platform provides a complete solution for creating and managing embeddable i
 
 1. **New to the project?** Start with [TODO.md](./TODO.md) for an overview of current tasks
 2. **Understanding the architecture?** Read [END_TO_END_PLAN.md](./architecture/END_TO_END_PLAN.md)
-3. **Working on API integration?** Check [CDN_DEPLOYMENT_PLAN.md](./api/CDN_DEPLOYMENT_PLAN.md)
+3. **Working on API integration?** Check [LP_WIDGET_INTEGRATION_SUMMARY.md](./api/LP_WIDGET_INTEGRATION_SUMMARY.md)
 4. **Deploying?** Review [deploy.sh](./architecture/deploy.sh)
 
 ## 🔗 Related Resources
