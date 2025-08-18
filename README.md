@@ -1,142 +1,141 @@
-# DOB Link - Embeddable Widget Platform
+# DOB Link - Embeddable RWA Token Widget Platform
 
-DOB Link is a comprehensive platform for creating, managing, and tracking embeddable investment widgets. The platform allows users to create customizable widgets that can be embedded on any website to facilitate token investments.
+DOB LINK is a comprehensive platform for creating, managing, and tracking embeddable widgets for RWA (Real World Asset) token marketplaces. The platform allows any website to display real-time token data, prices, and investment opportunities through a lightweight, customizable widget.
 
-## Architecture
+## **Project Overview**
 
-The application consists of three main components:
+### **What is DOB LINK?**
 
-1. **Admin Panel** - React-based interface for widget management and analytics
-2. **Embeddable Widget** - Lightweight React component for embedding on external sites
-3. **Smart Contracts** - Soroban-based contracts for handling investments on Stellar
+An **embeddable JavaScript widget** that displays real-time cryptocurrency data for RWA tokens (solar farms, wind energy, real estate, etc.). Any website can embed it to show live token prices, market cap, volume, and APY.
 
-## How It Works
+### **How It Works**
 
-### Widget Management System
+1. **RWA Projects** create widgets through the admin dashboard
+2. **Website Owners** embed the widget with a simple script tag
+3. **Visitors** see live token data without leaving the website
+4. **Analytics** track performance and user engagement
 
-The admin panel provides a complete widget management interface with the following features:
+## 🏗️ **Architecture**
 
-- **Project Organization**: Group widgets by projects (e.g., Solar Energy, Wind Power)
-- **Unique Hash Generation**: Each widget gets a unique tracking hash (e.g., `dob-solar001-abc123`)
+The application consists of four main components:
+
+1. **Admin Dashboard** - Next.js interface for widget management and analytics
+2. **Embeddable Widget** - Lightweight React component (< 50KB gzipped)
+3. **Backend API** - Express.js server with real-time data endpoints
+4. **Database** - PostgreSQL for data persistence
+
+## **Key Features**
+
+### **Widget Management System**
+
+- **Project Organization**: Group widgets by RWA projects (Solar Energy, Wind Power, etc.)
+- **Unique Hash Generation**: Each widget gets a unique tracking hash
 - **Widget Customization**: Configure theme, position, colors, and token information
-- **Embed Code Generation**: Generate JavaScript, React, or HTML embed snippets
+- **Embed Code Generation**: Generate secure, backend-generated JavaScript
 
-### Widget Creation Process
+### **Real-time Data Display**
 
-1. Create a new project with name, description, and color
-2. Add widgets to the project with token ID and configuration
-3. System generates unique hash for tracking
-4. Generate embed code in preferred format
-5. Copy and paste embed code to external websites
+- **Live Token Prices**: Real-time updates from CoinGecko/CoinMarketCap APIs
+- **Market Metrics**: Volume, market cap, APY, total liquidity
+- **Dynamic Updates**: Automatic refresh with fade animations
+- **Multi-chain Support**: Ethereum, Polygon, Base, Arbitrum tokens
 
-### Analytics and Tracking
+### **Analytics and Tracking**
 
-The platform tracks comprehensive analytics for each widget:
+- **Widget Views**: Number of times widget was loaded
+- **User Interactions**: Clicks, wallet connections, engagement metrics
+- **Performance Monitoring**: Load times, error rates, uptime
+- **Domain Analytics**: Track usage across different websites
 
-- **Views**: Number of times widget was loaded
-- **Conversions**: Percentage of views that resulted in investments
-- **Revenue**: Total amount invested through the widget
-- **Active Links**: Number of websites currently using the widget
+## **Technical Stack**
 
-### Embeddable Widget Features
-
-The embeddable widget provides:
-
-- **Floating Button**: Always visible button that expands to show investment interface
-- **Dynamic Data**: Real-time APR and TVL updates with fade animations
-- **Investment Interface**: Clean form for entering investment amounts
-- **Responsive Design**: Works on desktop and mobile devices
-- **Customizable Styling**: Theme and color customization options
-
-### Smart Contract Integration
-
-The Soroban smart contracts handle:
-
-- **Investment Storage**: Secure storage of investment data on Stellar blockchain
-- **Token Information**: Dynamic token data updates
-- **Event Logging**: Off-chain event emission for analytics
-- **Admin Management**: Contract administration and configuration
-
-## Technical Stack
-
-- **Frontend**: React, TypeScript, Tailwind CSS, Vite
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Vite
+- **Backend**: Express.js, Node.js, PostgreSQL
 - **Widget Distribution**: Backend-generated JavaScript with API key authentication
-- **Blockchain**: Soroban (Stellar L1), Rust smart contracts
-- **Analytics**: Real-time tracking and performance metrics
+- **Data Sources**: CoinGecko API, CoinMarketCap API
+- **Deployment**: Vercel, Netlify, Cloudflare
 
-## Documentation
+## **Documentation**
 
 Complete documentation is available in the [docs/](./docs/) directory:
 
-- **[Project Management](./docs/TODO.md)** - Tasks, milestones, and implementation phases
-- **[Architecture](./docs/architecture/)** - System design, technical specs, and deployment guides
-- **[API & Integration](./docs/api/)** - Widget deployment, database schema, and integration guides
-- **[Smart Contracts](./docs/contracts/)** - Contract documentation and specifications
+- **[Development Plan](./docs/architecture/TODO.md)** - Phase 1 implementation roadmap
+- **[Architecture Overview](./docs/architecture/README.md)** - System design and components
+- **[API Documentation](./docs/api/README.md)** - Endpoints and integration guide
+- **[Technical Specifications](./docs/architecture/DOB_LINK_Technical_Spec.md)** - Requirements and deliverables
 
-## Development
+## **Development**
 
-### Running the Admin Panel
+### **Quick Start**
 
 ```bash
-cd frontend
+# Clone the repository
+git clone <repository-url>
+cd DOBLINK
+
+# Start the admin dashboard
+cd dob-link-dashboard
 npm install
 npm run dev
+# Access at: http://localhost:3000
+
+# Start the widget development
+cd dob-link-widget
+npm install
+npm run dev
+# Access at: http://localhost:5173
+
+# Start the backend API
+cd backend
+npm install
+npm run dev
+# Access at: http://localhost:3001
 ```
 
-### Building the Widget
+### **Building for Production**
 
 ```bash
-npm run build:widget
+# Build the widget
+cd dob-link-widget
+npm run build
+# Output: dist/dob-link-widget.es.js (optimized bundle)
+
+# Build the dashboard
+cd dob-link-dashboard
+npm run build
+npm run start
 ```
 
-### Testing the Widget
+## **Usage**
 
-Open `test-widget.html` in a browser to test the embeddable widget locally.
+### **Creating a Widget**
 
-## Usage
-
-1. Open the admin panel at `http://localhost:5173`
-2. Create a new project or select existing project
-3. Create widgets with desired configuration
+1. Open the admin dashboard at `http://localhost:3000`
+2. Create a new project (e.g., "Solar Energy Fund")
+3. Add a widget with token configuration
 4. Copy the generated embed code
 5. Paste the code on any website to embed the widget
-6. Monitor performance through the analytics dashboard
 
-The platform provides a complete solution for creating and managing embeddable investment widgets with comprehensive tracking and analytics capabilities.
+### **Embedding Example**
 
-## Documentation Structure
+```html
+<script src="https://api.dobprotocol.com/widget.js"></script>
+<script>
+  createDobLinkWidget({
+    hash: "dob-solar001-abc123",
+    theme: "dark",
+    position: "bottom-right",
+  }).mount();
+</script>
+```
 
-### [Project Management](./TODO.md)
+## 🔗 **Related Resources**
 
-- **TODO.md** - Project tasks, milestones, and implementation phases
+- [Frontend Documentation](./frontend/README.md)
+- [Backend Documentation](./backend/README.md)
+- [Widget Documentation](./dob-link-widget/README.md)
+- [API Documentation](./docs/api/README.md)
 
-### [Architecture](./architecture/)
+---
 
-- **END_TO_END_PLAN.md** - Complete implementation plan from fiat to token delivery
-- **README_NEW_ARCHITECTURE.md** - New architecture overview and migration guide
-- **DOB_LINK_Technical_Spec.md** - Technical specifications and requirements
-- **DRAPER_U_SPRINT.md** - Sprint planning and development milestones
-- **deploy.sh** - Deployment scripts and procedures
-
-### [API & Integration](./api/)
-
-- **LP_WIDGET_INTEGRATION_SUMMARY.md** - Liquidity pool and widget integration
-- **supabase-schema.sql** - Database schema and structure
-
-### [Smart Contracts](./contracts/)
-
-- Smart contract documentation and specifications
-
-## Quick Start
-
-1. **New to the project?** Start with [TODO.md](./TODO.md) for an overview of current tasks
-2. **Understanding the architecture?** Read [END_TO_END_PLAN.md](./architecture/END_TO_END_PLAN.md)
-3. **Working on API integration?** Check [LP_WIDGET_INTEGRATION_SUMMARY.md](./api/LP_WIDGET_INTEGRATION_SUMMARY.md)
-4. **Deploying?** Review [deploy.sh](./architecture/deploy.sh)
-
-## 🔗 Related Resources
-
-- [Main Project README](../README.md)
-- [Frontend Documentation](../frontend/README.md)
-- [Backend Documentation](../backend/README.md)
-- [Widget Documentation](../dob-link-widget/README.md)
+**For questions or support, contact the DOB Protocol team at https://t.me/blessedux**

@@ -1,69 +1,141 @@
-# React + TypeScript + Vite
+# DOB LINK Widget
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Lightweight, embeddable React widget for displaying real-time RWA token data. Built with Vite and TypeScript for optimal performance and bundle size.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Real-time Data**: Live token prices, volume, market cap, and APY
+- **Lightweight**: < 50KB gzipped bundle size
+- **Customizable**: Themes, positioning, and custom styling
+- **Responsive**: Works on all devices and screen sizes
+- **Secure**: Backend-generated scripts with domain validation
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd dob-link-widget
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development Server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+The widget will be available at `http://localhost:5173`
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+Creates optimized bundle in `dist/` directory.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Widget Configuration
+
+### Basic Usage
+
+```html
+<script src="https://api.dobprotocol.com/widget.js"></script>
+<script>
+  createDobLinkWidget({
+    hash: "dob-solar001-abc123",
+    theme: "dark",
+    position: "bottom-right",
+  }).mount();
+</script>
+```
+
+### Configuration Options
+
+- `hash` (required): Unique widget identifier
+- `theme`: "light" | "dark" (default: "dark")
+- `position`: "bottom-right" | "bottom-left" | "top-right" | "top-left" (default: "bottom-right")
+- `customStyles`: Object with custom CSS properties
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── DobLinkWidget.tsx    # Main widget component
+│   └── ui/                  # Reusable UI components
+├── contexts/
+│   └── PrivyProvider.tsx    # Wallet connection context
+├── hooks/
+│   └── useWallet.ts         # Wallet integration hook
+├── services/
+│   └── api.ts              # API service for data fetching
+├── App.tsx                 # Main application
+├── main.tsx                # Entry point
+└── widget.tsx              # Widget entry point
+```
+
+## Technology Stack
+
+- **Framework**: React 18 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Authentication**: Privy for wallet connections
+- **State Management**: React hooks and context
+
+## Integration with Backend
+
+The widget connects to the DOB LINK backend API for:
+
+- Real-time token data (prices, volume, market cap)
+- Widget configuration and settings
+- Analytics tracking and performance monitoring
+- Security validation and domain restrictions
+
+## Performance Optimization
+
+- **Code Splitting**: Automatic bundle optimization
+- **Tree Shaking**: Unused code elimination
+- **Minification**: Production build optimization
+- **Caching**: Efficient data caching strategies
+
+## Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+## Deployment
+
+The widget is deployed as a backend-generated script for security and performance:
+
+1. Build the widget bundle
+2. Backend serves the script with embedded configuration
+3. Domain validation ensures secure embedding
+4. Real-time data served from backend APIs
+
+## Related Documentation
+
+- [API Documentation](../docs/api/README.md)
+- [Architecture Overview](../docs/architecture/README.md)
+- [Development Plan](../docs/architecture/TODO.md)
+- [Backend Setup](../backend/README.md)
+
+---
+
+**For questions or support, contact the DOB Protocol team at https://t.me/blessedux**

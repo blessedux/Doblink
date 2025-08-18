@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DOB LINK Dashboard
 
-## Getting Started
+Next.js admin dashboard for managing embeddable RWA token widgets. Provides a comprehensive interface for creating, configuring, and monitoring widgets across different projects.
 
-First, run the development server:
+## Features
+
+- **Project Management**: Organize widgets by RWA projects (Solar Energy, Wind Power, etc.)
+- **Widget Creation**: Generate unique widget hashes and configurations
+- **Real-time Analytics**: Track widget performance and user interactions
+- **Liquidity Pool Management**: Monitor token metrics and investment data
+- **Customization Tools**: Configure themes, positions, and styling options
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Setup
+
+```bash
+cd dob-link-dashboard
+npm install
+```
+
+### Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The dashboard will be available at `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/
+│   ├── components/          # React components
+│   │   ├── Dashboard.tsx   # Main dashboard interface
+│   │   ├── GuidedWidgetCreation.tsx
+│   │   ├── LiquidityPoolManager.tsx
+│   │   ├── ProjectDetailModal.tsx
+│   │   ├── WidgetDetailModal.tsx
+│   │   └── ui/             # Reusable UI components
+│   ├── contexts/
+│   │   └── PrivyProvider.tsx
+│   ├── hooks/
+│   │   └── useWallet.ts
+│   ├── services/
+│   │   ├── api.ts
+│   │   └── apiService.ts
+│   ├── layout.tsx
+│   └── page.tsx
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Components
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Dashboard Interface
 
-## Deploy on Vercel
+- **Project Overview**: List of all RWA projects and their widgets
+- **Widget Management**: Create, edit, and delete widgets
+- **Analytics Dashboard**: Real-time performance metrics
+- **Configuration Panel**: Customize widget appearance and behavior
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Widget Creation Flow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Project Selection**: Choose or create an RWA project
+2. **Token Configuration**: Set up token details and metrics
+3. **Widget Customization**: Configure theme, position, and styling
+4. **Embed Code Generation**: Generate secure embed scripts
+5. **Analytics Setup**: Configure tracking and monitoring
+
+## Technology Stack
+
+- **Framework**: Next.js 14 + React 18 + TypeScript
+- **Styling**: Tailwind CSS
+- **Authentication**: Privy for wallet connections
+- **State Management**: React hooks and context
+- **Backend Integration**: Express.js API
+
+## API Integration
+
+The dashboard connects to the DOB LINK backend API for:
+
+- Widget creation and management
+- Real-time analytics data
+- Liquidity pool information
+- User authentication and permissions
+
+## Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
+```
+
+## Deployment
+
+### Vercel (Recommended)
+
+```bash
+npm run build
+vercel --prod
+```
+
+### Other Platforms
+
+```bash
+npm run build
+npm start
+```
+
+## Analytics Features
+
+- **Widget Views**: Track how many times widgets are loaded
+- **User Interactions**: Monitor clicks, wallet connections, and engagement
+- **Performance Metrics**: Load times, error rates, and uptime
+- **Domain Analytics**: Track usage across different websites
+
+## Security
+
+- **API Key Management**: Secure widget authentication
+- **Domain Validation**: Restrict widget usage to authorized domains
+- **User Permissions**: Role-based access control
+- **Data Encryption**: Secure storage of sensitive information
+
+## Related Documentation
+
+- [API Documentation](../docs/api/README.md)
+- [Architecture Overview](../docs/architecture/README.md)
+- [Development Plan](../docs/architecture/TODO.md)
+- [Backend Setup](../backend/README.md)
+- [Widget Documentation](../dob-link-widget/README.md)
+
+---
+
+**For questions or support, contact the DOB Protocol team at https://t.me/blessedux**

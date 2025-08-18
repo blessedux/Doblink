@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig(({ command, mode }) => {
-  // Widget library build - optimized for CDN distribution
+  // Widget library build - optimized for backend script generation
   if (mode === 'widget') {
     return {
       plugins: [react()],

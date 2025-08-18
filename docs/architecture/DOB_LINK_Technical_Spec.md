@@ -1,35 +1,34 @@
 # DOB LINK: Technical Specification Document
 
 **Program:** Draper University Sprint  
-**Product:** DOB LINK — Embeddable Web3 On-Ramp for Tokenized DePIN Investments  
+**Product:** DOB LINK — Embeddable Web3 Widget for Tokenized DePIN Investments  
 **Protocol:** DOB Protocol (DePIN Operating Bridge)  
 **Certification Layer:** TRUFA  
-**Goal:** Enable frictionless, fiat-to-token investment for DePIN RWA tokens via a lightweight, embeddable widget powered by Stellar + Soroban + AlchemyPay.
+**Goal:** Enable frictionless display of real-time token data for DePIN RWA tokens via a lightweight, embeddable widget powered by a robust backend API.
 
 ---
 
 ## Summary
 
-DOB LINK allows anyone to embed a simple one-liner script into their site, enabling users to invest in tokenized infrastructure (DePIN) using **fiat (USD)** through **AlchemyPay**, routed to **USDC on Stellar**, and settled into a **Soroban smart contract** that logs the transaction for off-chain processing.
+DOB LINK allows anyone to embed a simple one-liner script into their site, enabling real-time display of tokenized infrastructure (DePIN) data including price, volume, market cap, APY, and liquidity information through a lightweight JavaScript widget connected to a powerful backend API.
 
 ---
 
 ## Core Objectives
 
 1. Build and deploy a marketing + docs landing page at `dobprotocol.com/doblink`.
-2. Build a Vite-powered JS widget that handles user on-ramp and token purchases.
-3. Integrate a fiat → USDC on-ramp via **Stellar Anchor Directory** (AlchemyPay-enabled anchors).
-4. Create a **Soroban smart contract** that:
-   - Accepts USDC
-   - Logs investor deposits
-   - Registers token/project ID for follow-up distribution
+2. Build a Vite-powered JS widget that displays real-time token data.
+3. Create a robust backend API that aggregates and serves token metrics.
+4. Develop an admin dashboard for liquidity pool and widget management.
 
 ---
 
 ## Architecture Flow
 
 ```
-User pays USD → AlchemyPay Anchor → USDC on Stellar → Soroban Contract → Logged Deposit → LP Admin Injects into Interoperable Pool (e.g. Base)
+External APIs → Backend API → Database → Widget → User Websites
+(CoinGecko,   (Data Aggregation, (Token Data, (Real-time  (Embedded
+ CoinMarketCap) Caching, Analytics) Widget Configs) Display) Script)
 ```
 
 ---
@@ -54,55 +53,62 @@ User pays USD → AlchemyPay Anchor → USDC on Stellar → Soroban Contract →
 
 **Stack:** Vite + React (compiled to lightweight JS bundle)  
 **Output:** Embed script or NPM package  
-**CDN Endpoint:** `https://dobprotocol.com/link.js`  
+**API Endpoint:** `https://api.dobprotocol.com/widget.js`  
 
 **Behavior:**
 - Renders an inline or floating modal UI
-- Displays project metadata and token info
-- Connects wallet (via Stellar WebAuthn/Passkeys or Freighter)
-- Walks user through fiat → USDC onramp via Stellar Anchor (AlchemyPay)
-- Pushes resulting USDC to Soroban contract
+- Displays real-time project metadata and token info
+- Shows live price, volume, market cap, and APY data
+- Updates automatically with fresh data
+- Customizable themes and positioning
 
 **Embed Example:**
 
 ```html
-<script
-  src="https://dobprotocol.com/link.js"
-  data-token-id="EVCHARGER001"
-></script>
+<script src="https://api.dobprotocol.com/widget.js"></script>
+<script>
+  createDobLinkWidget({
+    hash: 'dob-solar001-abc123',
+    theme: 'dark',
+    position: 'bottom-right'
+  }).mount();
+</script>
 ```
 
-Supports `data-project-name`, `data-style`, `data-mount-id`, etc.
+Supports `hash`, `theme`, `position`, `customStyles`, etc.
 
 ---
 
-### 3. Fiat On-Ramp via Stellar Anchor Directory (AlchemyPay)
+### 3. Backend API (Token Data Aggregation)
 
 **Tech:**
-- Query **Stellar Anchor Directory** to find supported USD anchors
-- Filter for **AlchemyPay-enabled** or compliant anchors
-- Use the SEP-24 interactive deposit protocol to launch KYC + card-based flow
+- Express.js API server
+- PostgreSQL database
+- External API integrations (CoinGecko, CoinMarketCap)
+- Real-time data caching and aggregation
 
-**Steps:**
-1. User enters USD amount
-2. Opens AlchemyPay/Anchor-hosted flow via popup or iframe
-3. Completes KYC + fiat deposit via Apple Pay / Google Pay / card
-4. Anchor issues **USDC to user's Stellar wallet**
-5. Widget listens for USDC and sends it to **target Soroban contract**
+**Features:**
+1. Token metrics aggregation from multiple sources
+2. Real-time data validation and normalization
+3. Widget configuration management
+4. Analytics tracking and reporting
+5. Rate limiting and security
 
 ---
 
-### 4. Soroban Smart Contract (USDC Intake & Logging)
+### 4. Database Schema (Token Data & Widget Management)
+
+**Core Tables:**
+- `liquidity_pools` - Token and LP information
+- `token_metrics` - Real-time price and volume data
+- `widgets` - Widget configurations and settings
+- `widget_analytics` - Usage tracking and metrics
 
 **Functions:**
-- Accepts `USDC` deposits
-- Stores:
-  - `buyer_wallet`
-  - `project_id`
-  - `deposit_amount`
-  - `timestamp`
-- Emits `InvestmentLogged` event for DOB Agent to process
-- Does **not** immediately mint tokens — that’s handled off-chain or in future upgrade
+- Stores token metadata and real-time metrics
+- Manages widget configurations and themes
+- Tracks analytics and performance data
+- Provides data for dashboard and API endpoints
 
 ---
 
@@ -111,11 +117,10 @@ Supports `data-project-name`, `data-style`, `data-mount-id`, etc.
 | Layer          | Tech / Stack                          |
 |----------------|----------------------------------------|
 | UI (Landing)   | Next.js + Tailwind                     |
-| Widget         | Vite + React, embedded via CDN         |
-| Auth           | Stellar WebAuthn / Passkeys / Freighter |
-| On-Ramp        | Stellar Anchor (AlchemyPay support)    |
-| Smart Contract | Soroban (USDC intake + event emit)     |
-| DB             | Supabase (PostgreSQL)                  |
+| Widget         | Vite + React, embedded via API         |
+| Backend        | Express.js + PostgreSQL                |
+| Database       | PostgreSQL                             |
+| Data Sources   | CoinGecko, CoinMarketCap APIs          |
 | Hosting        | Vercel                                 |
 
 ---
@@ -125,36 +130,36 @@ Supports `data-project-name`, `data-style`, `data-mount-id`, etc.
 ### ✅ Phase 1: Setup
 - [x] Next.js repo created for landing page
 - [x] Vite repo created for widget
-- [x] Soroban dev environment ready
+- [x] Express.js backend setup
 - [x] Project metadata format defined
 
 ### 🚧 Phase 2: Core Build
 - [x] Initial landing page content
 - [x] Widget renders in embed context
-- [ ] Integrate SEP-24 Anchor flow (AlchemyPay)
-- [ ] Build Soroban contract for deposit logging
-- [ ] Connect wallet flow (WebAuthn or Freighter)
+- [ ] Backend API with token data endpoints
+- [ ] Database schema and migrations
+- [ ] External API integrations
 
 ### 🔜 Phase 3: Integration & QA
-- [ ] End-to-end test: USD → token investment via test anchor
+- [ ] End-to-end test: widget with live data
 - [ ] Finalize documentation
-- [ ] CDN deployment & public script hosting
-- [ ] Analytics via Supabase logs
+- [ ] API deployment & public script hosting
+- [ ] Analytics via database logs
 
 ### 🚀 Phase 4: Launch
 - [ ] Partner onboarding with 3+ Infra Operators
 - [ ] Feedback loop
-- [ ] Iterative enhancements (token minting, off-ramp, dashboards)
+- [ ] Iterative enhancements (advanced analytics, custom themes)
 
 ---
 
 ## Optional Features (Nice to Have)
 
 - Admin dashboard to generate embed snippets
-- Optional iframe version of the widget
-- Token minting automation (post Soroban log verification)
+- Advanced analytics and reporting
 - Custom styling and themes for embed UI
-- Developer metrics: conversion rate, onramp volume, etc.
+- Developer metrics: view rates, performance, etc.
+- Multi-chain token support
 
 ---
 
@@ -162,12 +167,12 @@ Supports `data-project-name`, `data-style`, `data-mount-id`, etc.
 
 | KPI                         | Target                            |
 |-----------------------------|------------------------------------|
-| Load time (widget)          | < 2s                               |
-| Bundle size (gzipped)       | < 100 KB                           |
+| Load time (widget)          | < 1s                               |
+| Bundle size (gzipped)       | < 50 KB                           |
 | Onboarded Infra Operators   | ≥ 5 in first 30 days               |
-| User conversion (USD → USDC)| ≥ 20% of starts complete onramp    |
-| Transaction volume (Q1)     | ≥ $10,000                          |
-| Uptime (widget + backend)   | ≥ 99.9%                            |
+| Widget views                | ≥ 1000 in first month              |
+| API response time           | < 200ms                           |
+| Uptime (widget + backend)   | ≥ 99.9%                           |
 
 ---
 

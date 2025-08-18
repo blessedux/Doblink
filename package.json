@@ -1,7 +1,7 @@
 {
   "name": "dob-link",
   "version": "1.0.0",
-  "description": "DOB Link - Web3 on-ramp widget platform",
+  "description": "DOB Link - Embeddable RWA Token Widget Platform",
   "private": true,
   "workspaces": [
     "dob-link-dashboard",
@@ -33,7 +33,7 @@
   "keywords": [
     "web3",
     "widget",
-    "on-ramp",
+    "widget",
     "tokens",
     "blockchain"
   ],
