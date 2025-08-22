@@ -1,0 +1,112 @@
+{
+  "users": [
+    {
+      "email": "demo@dobprotocol.com",
+      "walletAddress": "12345678-90ab-cdef-1234-567890abcdef",
+      "createdAt": "2025-08-21T00:00:00.000Z",
+      "updatedAt": "2025-08-21T00:00:00.000Z"
+    }
+  ],
+  "liquidityPools": [
+    {
+      "name": "Solar Energy LP",
+      "description": "Renewable energy investment liquidity pool",
+      "tokenSymbol": "SOLAR",
+      "tokenAddress": "12345678-90ab-cdef-1234-567890abcdef",
+      "lpAddress": "abcdef12-3456-7890-abcd-ef1234567890",
+      "network": "ethereum",
+      "walletAddress": "12345678-90ab-cdef-1234-567890abcdef",
+      "status": "active",
+      "totalLiquidity": 2400000.00,
+      "apy": 12.5,
+      "minInvestment": 10.00,
+      "maxInvestment": 100000.00,
+      "createdAt": "2025-08-21T00:00:00.000Z",
+      "updatedAt": "2025-08-21T00:00:00.000Z"
+    },
+    {
+      "name": "Wind Power LP",
+      "description": "Wind energy infrastructure liquidity pool",
+      "tokenSymbol": "WIND",
+      "tokenAddress": "23456789-01bc-def2-3456-78901bcdef23",
+      "lpAddress": "bcdef123-4567-890b-cdef-1234567890bc",
+      "network": "polygon",
+      "walletAddress": "12345678-90ab-cdef-1234-567890abcdef",
+      "status": "active",
+      "totalLiquidity": 1560000.00,
+      "apy": 15.2,
+      "minInvestment": 25.00,
+      "maxInvestment": 50000.00,
+      "createdAt": "2025-08-21T00:00:00.000Z",
+      "updatedAt": "2025-08-21T00:00:00.000Z"
+    }
+  ],
+  "widgets": [
+    {
+      "hash": "widget-solar-001",
+      "lpId": "abcdef12-3456-7890-abcd-ef1234567890",
+      "theme": "light",
+      "position": "bottom-right",
+      "customStyles": {
+        "backgroundColor": "#ffffff",
+        "color": "#000000"
+      },
+      "isActive": true,
+      "createdAt": "2025-08-21T00:00:00.000Z",
+      "updatedAt": "2025-08-21T00:00:00.000Z"
+    },
+    {
+      "hash": "widget-wind-002",
+      "lpId": "bcdef123-4567-890b-cdef-1234567890bc",
+      "theme": "dark",
+      "position": "top-left",
+      "customStyles": {
+        "backgroundColor": "#000000",
+        "color": "#ffffff"
+      },
+      "isActive": true,
+      "createdAt": "2025-08-21T00:00:00.000Z",
+      "updatedAt": "2025-08-21T00:00:00.000Z"
+    }
+  ],
+  "widget_analytics": [
+    {
+      "widgetHash": "widget-solar-001",
+      "eventType": "view",
+      "domain": "example.com",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "timestamp": "2025-08-21T12:00:00.000Z"
+    },
+    {
+      "widgetHash": "widget-wind-002",
+      "eventType": "click",
+      "domain": "example.org",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+      "timestamp": "2025-08-21T12:05:00.000Z"
+    }
+  ],
+  "token_metrics": [
+    {
+      "lpId": "abcdef12-3456-7890-abcd-ef1234567890",
+      "priceUsd": 1.25,
+      "marketCap": 5000000.00,
+      "volume24h": 250000.00,
+      "circulatingSupply": 4000000.00,
+      "totalSupply": 5000000.00,
+      "priceChange24h": 2.5,
+      "volumeChange24h": 10.0,
+      "timestamp": "2025-08-21T12:00:00.000Z"
+    },
+    {
+      "lpId": "bcdef123-4567-890b-cdef-1234567890bc",
+      "priceUsd": 0.85,
+      "marketCap": 3000000.00,
+      "volume24h": 150000.00,
+      "circulatingSupply": 3500000.00,
+      "totalSupply": 4000000.00,
+      "priceChange24h": -1.2,
+      "volumeChange24h": 5.0,
+      "timestamp": "2025-08-21T12:00:00.000Z"
+    }
+  ]
+}
