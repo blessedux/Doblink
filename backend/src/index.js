@@ -4,6 +4,25 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
+const { Pool } = require('pg');
+const { dbConfig } = require('./db/dbConfig');
+
+// Connect to PostgreSQL database
+const pool = new Pool({
+  user: dbConfig.user,
+  host: dbConfig.host,
+  database: dbConfig.database,
+  password: dbConfig.password,
+  port: dbConfig.port,
+});
+
+pool.connect()
+  .then(client => {
+    console.log('Connected to DB');
+    client.release();
+  })
+  .catch(err => console.error('Error with DB connection', err));
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -64,77 +83,16 @@ const generateWidgetHash = (tokenId, projectId) => {
   const timestamp = Date.now();
   const randomSuffix = Math.random().toString(36).substring(2, 8);
   const baseString = `${tokenId}-${projectId}-${timestamp}-${randomSuffix}`;
-  
+
   let hash = 0;
   for (let i = 0; i < baseString.length; i++) {
     const char = baseString.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
   }
-  
+
   return `dob-${Math.abs(hash).toString(36)}-${randomSuffix}`;
 };
-
-// Initialize sample data
-const initializeSampleData = () => {
-  // Sample user
-  const sampleUser = {
-    id: 'user-1',
-    email: 'demo@dobprotocol.com',
-    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
-    createdAt: new Date().toISOString()
-  };
-  users.set(sampleUser.id, sampleUser);
-
-  // Sample liquidity pools
-  const sampleLPs = [
-    {
-      id: 'lp-1',
-      name: 'Solar Energy LP',
-      description: 'Renewable energy investment liquidity pool',
-      tokenSymbol: 'SOLAR',
-      tokenAddress: '0x1234567890abcdef1234567890abcdef12345678',
-      lpAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
-      network: 'ethereum',
-      lpType: 'ethereum',
-      userId: 'user-1',
-      walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
-      status: 'active',
-      totalLiquidity: 2400000.00,
-      apy: 12.5,
-      minInvestment: 10.00,
-      maxInvestment: 100000.00,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: 'lp-2',
-      name: 'Wind Power LP',
-      description: 'Wind energy infrastructure liquidity pool',
-      tokenSymbol: 'WIND',
-      tokenAddress: '0x2345678901bcdef2345678901bcdef2345678901',
-      lpAddress: '0xbcdef1234567890bcdef1234567890bcdef12345',
-      network: 'polygon',
-      lpType: 'polygon',
-      userId: 'user-1',
-      walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
-      status: 'active',
-      totalLiquidity: 1560000.00,
-      apy: 15.2,
-      minInvestment: 25.00,
-      maxInvestment: 50000.00,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ];
-
-  sampleLPs.forEach(lp => {
-    liquidityPools.set(lp.id, lp);
-  });
-};
-
-// Initialize sample data
-initializeSampleData();
 
 // Routes
 
@@ -174,7 +132,7 @@ app.post('/api/users', (req, res) => {
     }
 
     let user = Array.from(users.values()).find(u => u.walletAddress === value.walletAddress);
-    
+
     if (user) {
       // Update existing user
       user = { ...user, ...value, updatedAt: new Date().toISOString() };
@@ -219,21 +177,66 @@ app.get('/api/liquidity-pools/wallet/:walletAddress', (req, res) => {
 });
 
 // Get liquidity pool by ID
-app.get('/api/liquidity-pools/:id', (req, res) => {
+app.get('/api/liquidity-pools/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const lp = liquidityPools.get(id);
 
-    if (!lp) {
+    const result = await pool.query('SELECT * FROM liquidity_pools WHERE id = $1', [id]);
+
+    if (!result) {
       return res.status(404).json({ error: 'Liquidity pool not found' });
     }
 
     res.json({
       success: true,
-      liquidityPool: lp
+      liquidityPool: result
     });
   } catch (error) {
     console.error('Error getting liquidity pool:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get real-time token metrics
+app.get('/api/liquidity-pools/:id/metrics', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const lpResult = await pool.query('SELECT * FROM liquidity_pools WHERE id = $1', [id]);
+    
+    if (lpResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Liquidity pool not exist' });
+    }
+    
+    const metricsResult = await pool.query('SELECT * FROM token_metrics WHERE lp_id = $1', [id]);
+
+    if (!metricsResult) {
+      return res.status(404).json({ error: 'Token metrics not finded' });
+    }
+
+    res.json({
+      success: true,      
+      metrics: metricsResult.rows
+    });
+  } catch (error) {
+    console.error('Error getting token metrics:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get all liquidity pools
+app.get('/api/liquidity-pools', async (req, res) => {
+  try {
+
+    const result = await pool.query('SELECT * FROM liquidity_pools');
+
+    res.json({
+      success: true,
+      liquidityPools: result
+    });
+
+  } catch (error) {
+    console.error('Error getting liquidity pools:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -304,21 +307,21 @@ app.put('/api/liquidity-pools/:id', (req, res) => {
 // Create new widget with guided flow
 app.post('/api/widgets/guided', (req, res) => {
   try {
-    const { 
-      step, 
-      walletAddress, 
-      selectedLPId, 
-      projectName, 
-      projectDescription, 
-      tokenId, 
-      theme, 
-      position 
+    const {
+      step,
+      walletAddress,
+      selectedLPId,
+      projectName,
+      projectDescription,
+      tokenId,
+      theme,
+      position
     } = req.body;
 
     // Step 1: Get user's liquidity pools
     if (step === 'get-lps') {
       const userLPs = Array.from(liquidityPools.values()).filter(lp => lp.walletAddress === walletAddress);
-      
+
       return res.json({
         success: true,
         step: 'select-lp',
