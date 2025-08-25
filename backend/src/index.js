@@ -183,8 +183,12 @@ app.get('/api/liquidity-pools/:id', async (req, res) => {
 
     const result = await pool.query('SELECT * FROM liquidity_pools WHERE id = $1', [id]);
 
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Liquidity pool not founded' });
+    }
+
     if (!result) {
-      return res.status(404).json({ error: 'Liquidity pool not found' });
+      return res.status(404).json({ error: 'Liquidity pool not founded' });
     }
 
     res.json({
@@ -197,25 +201,55 @@ app.get('/api/liquidity-pools/:id', async (req, res) => {
   }
 });
 
+// Get liquidity pool by token id
+app.get('/api/liquidity-pools/token/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query('SELECT * FROM liquidity_pools WHERE token_symbol = $1', [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Liquidity pool not founded' });
+    }
+
+    if (!result) {
+      return res.status(404).json({ error: 'Liquidity pool not founded' });
+    }
+
+    res.json({
+      success: true,
+      liquidityPool: result
+    });
+  } catch (error) {
+    console.error('Error getting liquidity pool:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 // Get real-time token metrics
 app.get('/api/liquidity-pools/:id/metrics', async (req, res) => {
   try {
     const { id } = req.params;
 
     const lpResult = await pool.query('SELECT * FROM liquidity_pools WHERE id = $1', [id]);
-    
+
     if (lpResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Liquidity pool not exist' });
+      return res.status(404).json({ error: 'Liquidity pool not founded' });
     }
-    
+
     const metricsResult = await pool.query('SELECT * FROM token_metrics WHERE lp_id = $1', [id]);
+    
+    if (metricsResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Token metrics not finded' });
+    }
 
     if (!metricsResult) {
       return res.status(404).json({ error: 'Token metrics not finded' });
     }
 
     res.json({
-      success: true,      
+      success: true,
       metrics: metricsResult.rows
     });
   } catch (error) {
@@ -276,7 +310,7 @@ app.put('/api/liquidity-pools/:id', (req, res) => {
     const lp = liquidityPools.get(id);
 
     if (!lp) {
-      return res.status(404).json({ error: 'Liquidity pool not found' });
+      return res.status(404).json({ error: 'Liquidity pool not founded' });
     }
 
     const { error, value } = liquidityPoolSchema.validate(req.body);
@@ -439,19 +473,22 @@ app.post('/api/widgets', (req, res) => {
 });
 
 // Get widget by hash
-app.get('/api/widgets/:hash', (req, res) => {
+app.get('/api/widgets/:hash', async (req, res) => {
   try {
-    const { hash } = req.params;
-    const widget = widgets.get(hash);
 
-    if (!widget) {
+    const { hash } = req.params;
+
+    const result = await pool.query('SELECT * FROM widgets WHERE hash = $1', [hash]);
+
+    if (!result) {
       return res.status(404).json({ error: 'Widget not found' });
     }
 
     res.json({
       success: true,
-      widget: widget
+      widget: result
     });
+
   } catch (error) {
     console.error('Error getting widget:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -514,21 +551,16 @@ app.delete('/api/widgets/:hash', (req, res) => {
 });
 
 // Get all widgets
-app.get('/api/widgets', (req, res) => {
+app.get('/api/widgets', async (req, res) => {
   try {
-    const { projectId } = req.query;
-    let widgetsList = Array.from(widgets.values());
-
-    if (projectId) {
-      widgetsList = widgetsList.filter(widget => widget.projectId === projectId);
-    }
-
+    const result = await pool.query('SELECT * FROM widgets');
     res.json({
       success: true,
-      widgets: widgetsList
+      widgets: result
     });
+
   } catch (error) {
-    console.error('Error getting widgets:', error);
+    console.error('Error getting widgets: ', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
