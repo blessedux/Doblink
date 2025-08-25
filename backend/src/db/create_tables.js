@@ -31,6 +31,7 @@ const createTables = async () => {
                 token_address VARCHAR NOT NULL,
                 lp_address VARCHAR NOT NULL,
                 network VARCHAR NOT NULL,
+                lp_type VARCHAR CHECK (lp_type IN ('base', 'stellar', 'ethereum', 'polygon', 'arbitrum')),
                 wallet_address VARCHAR NOT NULL,
                 status VARCHAR DEFAULT 'active',
                 total_liquidity DECIMAL,
@@ -60,6 +61,8 @@ const createTables = async () => {
         const creteTableWidgets = `
             CREATE TABLE widgets (
                 hash VARCHAR UNIQUE NOT NULL,
+                token_id VARCHAR NOT NULL,
+                project_id VARCHAR NOT NULL,
                 lp_id UUID REFERENCES liquidity_pools(id) ON DELETE CASCADE,
                 theme VARCHAR CHECK (theme IN ('light', 'dark')),
                 position VARCHAR CHECK (position IN ('bottom-right', 'bottom-left', 'top-right', 'top-left')),

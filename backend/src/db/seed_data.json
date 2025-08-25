@@ -11,7 +11,7 @@
     {
       "name": "Solar Energy LP",
       "description": "Renewable energy investment liquidity pool",
-      "tokenSymbol": "SOLAR",
+      "tokenSymbol": "SOL",
       "tokenAddress": "12345678-90ab-cdef-1234-567890abcdef",
       "lpAddress": "abcdef12-3456-7890-abcd-ef1234567890",
       "network": "ethereum",
@@ -27,7 +27,7 @@
     {
       "name": "Wind Power LP",
       "description": "Wind energy infrastructure liquidity pool",
-      "tokenSymbol": "WIND",
+      "tokenSymbol": "WIN",
       "tokenAddress": "23456789-01bc-def2-3456-78901bcdef23",
       "lpAddress": "bcdef123-4567-890b-cdef-1234567890bc",
       "network": "polygon",
@@ -43,7 +43,9 @@
   ],
   "widgets": [
     {
-      "hash": "widget-solar-001",
+      "hash": "dob-solar001-abc123",
+      "tokenId": "SOL",
+      "projectId": "project-001",
       "lpId": "abcdef12-3456-7890-abcd-ef1234567890",
       "theme": "light",
       "position": "bottom-right",
@@ -57,6 +59,8 @@
     },
     {
       "hash": "widget-wind-002",
+      "tokenId": "WIN",
+      "projectId": "project-002",
       "lpId": "bcdef123-4567-890b-cdef-1234567890bc",
       "theme": "dark",
       "position": "top-left",
@@ -71,7 +75,7 @@
   ],
   "widget_analytics": [
     {
-      "widgetHash": "widget-solar-001",
+      "widgetHash": "dob-solar001-abc123",
       "eventType": "view",
       "domain": "example.com",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",

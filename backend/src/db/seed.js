@@ -29,8 +29,8 @@ const seedDatabase = async () => {
         for (const lp of seedData.liquidityPools) {
             const result = await client.query(
                 `INSERT INTO liquidity_pools (
-                    name, description, token_symbol, token_address, lp_address, network, wallet_address, status, total_liquidity, apy, min_investment, max_investment
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                    name, description, token_symbol, token_address, lp_address, network, lp_type, wallet_address, status, total_liquidity, apy, min_investment, max_investment, created_at, updated_at
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                 RETURNING id`,
                 [
                     lp.name,
@@ -39,26 +39,31 @@ const seedDatabase = async () => {
                     lp.tokenAddress,
                     lp.lpAddress,
                     lp.network,
+                    lp.lpType,
                     lp.walletAddress,
                     lp.status,
                     lp.totalLiquidity,
                     lp.apy,
                     lp.minInvestment,
                     lp.maxInvestment,
+                    lp.createdAt,
+                    lp.updatedAt,
                 ]
             );
-            liquidityPoolIds[lp.lpAddress] = result.rows[0].id; 
+            liquidityPoolIds[lp.lpAddress] = result.rows[0].id;
         }
 
         // Insert widgets
         for (const widget of seedData.widgets) {
             await client.query(
                 `INSERT INTO widgets (
-                    hash, lp_id, theme, position, custom_styles, is_active, created_at, updated_at
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+                    hash, token_id, project_id, lp_id, theme, position, custom_styles, is_active, created_at, updated_at
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
                 [
                     widget.hash,
-                    liquidityPoolIds[widget.lpId], 
+                    widget.tokenId,      
+                    widget.projectId,    
+                    liquidityPoolIds[widget.lpId],
                     widget.theme,
                     widget.position,
                     JSON.stringify(widget.customStyles),
@@ -92,7 +97,7 @@ const seedDatabase = async () => {
                     lp_id, price_usd, market_cap, volume_24h, circulating_supply, total_supply, price_change_24h, volume_change_24h, timestamp
                 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
                 [
-                    liquidityPoolIds[metric.lpId], 
+                    liquidityPoolIds[metric.lpId],
                     metric.priceUsd,
                     metric.marketCap,
                     metric.volume24h,
