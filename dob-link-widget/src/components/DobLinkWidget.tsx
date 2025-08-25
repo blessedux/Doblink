@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import type { DobLinkWidgetConfig } from '../widget';
 import apiService from '../services/api';
+import Loading from '../components/ui/Loader'
+// format TVL in millions
+function formatMillions(value: number): string {
+  if (value == null) return '-';
+  const millions = value / 1_000_000;
+  return `$${millions.toFixed(2)}M`;
+}
 
 interface DobLinkWidgetProps {
   config: DobLinkWidgetConfig;
@@ -18,13 +25,13 @@ type InvestmentState = 'preview' | 'amount' | 'wallet-connect' | 'transaction' |
 const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState('');
-  const [apr, setApr] = useState(12.08);
-  const [tvl, setTvl] = useState(2.41);
+  const [apr, setApr] = useState(0);
+  const [tvl, setTvl] = useState(0);
   const [aprKey, setAprKey] = useState(0);
   const [tvlKey, setTvlKey] = useState(0);
   const [isAprVisible, setIsAprVisible] = useState(true);
   const [isTvlVisible, setIsTvlVisible] = useState(true);
-  
+
   // Wallet and investment states
   const [walletState, setWalletState] = useState<WalletState>('disconnected');
   const [investmentState, setInvestmentState] = useState<InvestmentState>('preview');
@@ -37,27 +44,40 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
   };
 
   // Track widget view on mount
+  // Load initial APR and TVL
   useEffect(() => {
     if (config.hash) {
       apiService.trackWidgetView(config.hash, getCurrentDomain());
     }
-  }, [config.hash]);
+    setIsAprVisible(false);
+    setIsTvlVisible(false);
+    if (config.tokenId) {
+      apiService.getPoolMetrics(config.tokenId).then(({ apr, tvl }) => {
+        setApr(apr);
+        setTvl(tvl);
+        setAprKey(prev => prev + 1);
+        setTvlKey(prev => prev + 1);
+        setIsAprVisible(true);
+        setIsTvlVisible(true);
+      });
+    }
+  }, [config.hash, config.tokenId]);
 
-  // Update APR and TVL every 10 seconds with fade animation
+  // Update APR and TVL every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setIsAprVisible(false);
       setIsTvlVisible(false);
-      
-      setTimeout(() => {
-        setApr(parseFloat((12.06 + Math.random() * 0.06).toFixed(2)));
-        setTvl(parseFloat((2.40 + Math.random() * 0.02).toFixed(2)));
-        setAprKey(prev => prev + 1);
-        setTvlKey(prev => prev + 1);
-        
-        setIsAprVisible(true);
-        setIsTvlVisible(true);
-      }, 300);
+      if (config.tokenId) {
+        apiService.getPoolMetrics(config.tokenId).then(({ apr, tvl }) => {
+          setApr(apr);
+          setTvl(tvl);
+          setAprKey(prev => prev + 1);
+          setTvlKey(prev => prev + 1);
+          setIsAprVisible(true);
+          setIsTvlVisible(true);
+        });
+      }
     }, 10000);
 
     return () => clearInterval(interval);
@@ -85,19 +105,19 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
   const connectWallet = async () => {
     setWalletState('connecting');
     setErrorMessage('');
-    
+
     try {
       if (typeof window !== 'undefined' && (window as any).ethereum) {
         const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
         if (accounts && accounts.length > 0) {
           setWalletAddress(accounts[0]);
           setWalletState('connected');
-          
+
           // Track wallet connection
           if (config.hash) {
             apiService.trackWalletConnect(config.hash, getCurrentDomain());
           }
-          
+
           setInvestmentState('amount');
         } else {
           throw new Error('No accounts found');
@@ -113,7 +133,7 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
 
   const handleAmountSubmit = () => {
     if (!amount || parseFloat(amount) <= 0) return;
-    
+
     if (walletState === 'connected') {
       setInvestmentState('transaction');
       processTransaction();
@@ -125,30 +145,30 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
   const processTransaction = async () => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       // TODO: Implement actual transaction logic with smart contracts
       // 1. Validate amount
       // 2. Check USDC balance
       // 3. Call smart contract
       // 4. Wait for confirmation
-      
+
       await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate transaction
-      
+
       // Track successful sale
       if (config.hash) {
         apiService.trackSale(config.hash, getCurrentDomain(), amount, config.preferredCurrency || 'USD');
       }
-      
+
       setInvestmentState('success');
       setIsLoading(false);
-      
+
       // Reset after success
       setTimeout(() => {
         setInvestmentState('preview');
         setAmount('');
       }, 3000);
-      
+
     } catch (err: any) {
       setInvestmentState('error');
       setErrorMessage(err.message || 'Transaction failed');
@@ -187,24 +207,26 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
             <div className="flex justify-end gap-4 mb-6">
               <div className="text-right">
                 <div className="text-xs opacity-75 mb-1">APR</div>
-                <div 
+                <div
                   key={aprKey}
-                  className={`text-green-500 font-bold text-sm transition-opacity duration-300 ${
-                    isAprVisible ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className={`text-green-500 font-bold text-sm transition-opacity duration-300 ${isAprVisible ? 'opacity-100' : 'opacity-0'
+                    }`}
                 >
-                  {apr}%
+                  <>
+                    {apr} %
+                  </>
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-xs opacity-75 mb-1">TVL</div>
-                <div 
+                <div
                   key={tvlKey}
-                  className={`font-bold text-sm transition-opacity duration-300 ${
-                    isTvlVisible ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className={`font-bold text-sm transition-opacity duration-300 ${isTvlVisible ? 'opacity-100' : 'opacity-0'
+                    }`}
                 >
-                  ${tvl}M
+                  <>
+                    {formatMillions(tvl)}
+                  </>
                 </div>
               </div>
             </div>
@@ -286,7 +308,7 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
             </div>
 
             {/* Investment Preview */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <div className="text-sm">
                 <div className="flex justify-between mb-2">
                   <span>Amount:</span>
@@ -318,10 +340,7 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
               >
                 {walletState === 'connecting' ? (
                   <div className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
+                    <Loading />
                     Connecting...
                   </div>
                 ) : (
@@ -354,7 +373,7 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
             </div>
 
             {/* Transaction Details */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <div className="text-sm">
                 <div className="flex justify-between mb-2">
                   <span>Amount:</span>
@@ -374,10 +393,7 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
             {/* Loading State */}
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 mb-4">
-                <svg className="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+              <Loading />
               </div>
               <p className="text-sm text-gray-600">Confirming transaction...</p>
             </div>
@@ -466,8 +482,8 @@ const DobLinkWidget: React.FC<DobLinkWidgetProps> = ({ config, onClose }) => {
     <div className="dob-link-widget">
       <div className={`
         w-full max-w-md mx-auto p-6 rounded-3xl shadow-2xl backdrop-blur-xl border
-        ${config.backgroundColor === '#FFFFFF' 
-          ? 'bg-white/90 text-gray-800 border-white/20' 
+        ${config.backgroundColor === '#FFFFFF'
+          ? 'bg-white/90 text-gray-800 border-white/20'
           : 'bg-gray-900/90 text-white border-gray-700/50'
         }
       `}>
