@@ -56,6 +56,13 @@ NONE
     "error": "Route not found"
 }
 ```
+```json
+500
+
+{
+    "error": "Internal server error"
+}
+```
 
 ## LIQUIDITY POOL BY ID
 
@@ -110,6 +117,13 @@ GET SPECIFIC LIQUIDITY POOL BY ID
 
 ```
 ```json
+404 NOT FOUND
+
+{
+    "error": "Liquidity pool not found"
+}
+```
+```json
 500 ERROR
 
 {
@@ -158,6 +172,81 @@ GET SPECIFIC LIQUIDITY POOL METRICS BY POOL ID
     ]
 }
 
+```
+```json
+404 NO FOUND
+
+{
+    "error": "Liquidity pool not found"
+}
+```
+```json
+500 ERROR
+
+{
+    "error": "Internal server error"
+}
+```
+
+## LIQUIDITY POOL BY TOKEN ID
+
+### DESCRIPTION
+GET SPECIFIC LIQUIDITY POOL BY TOKEN ID, USED TO GET APR AND TVL VALUES
+
+### ENDPOINT
+`GET /api/liquidity-pools/token/:id`
+
+
+### (JSON) PARAMETERS 
+| Parámetro | Tipo   | Requerido | Descripción                            |
+| --------- | ------ | --------- | -------------------------------------- |
+|   `id`    | string |    yes    | AUTO-GENERATED ID CREATED BY DB SCHEMA |
+
+
+### EXAMPLE REQUEST
+`GET /api/liquidity-pools/token/:SOL`
+
+### POSSIBLE RESULTS
+
+```json
+200 OK
+
+{
+    "success": true,
+    "liquidityPool": {
+        "command": "SELECT",
+        "rowCount": 1,
+        "oid": null,
+        "rows": [
+            {
+                "id": "94d5ce64-151e-4121-a3f3-f1290a771ba7",
+                "name": "Solar Energy LP",
+                "description": "Renewable energy investment liquidity pool",
+                "token_symbol": "SOL",
+                "token_address": "12345678-90ab-cdef-1234-567890abcdef",
+                "lp_address": "abcdef12-3456-7890-abcd-ef1234567890",
+                "network": "ethereum",
+                "lp_type": null,
+                "wallet_address": "12345678-90ab-cdef-1234-567890abcdef",
+                "status": "active",
+                "total_liquidity": "2400000",
+                "apy": "12.5",
+                "min_investment": "10",
+                "max_investment": "100000",
+                "created_at": "2025-08-21T04:00:00.000Z",
+                "updated_at": "2025-08-21T04:00:00.000Z"
+            }
+        ],
+    }
+}
+
+```
+```json
+404 NO FOUND
+
+{
+    "error": "Liquidity pool not found"
+}
 ```
 ```json
 500 ERROR
